@@ -57,7 +57,7 @@ function LeaveRequest() {
 
   const fetchUserProfiles = async () => {
     try {
-      const response = await axios.get('https://blitzlearning-lms.onrender.com/leaveapplications');
+      const response = await axios.get('http://localhost:4000/leaveapplications');
       const sortedData = response.data.sort((a, b) => {
         // Convert startdate strings to Date objects for comparison
         const dateA = new Date(b.applied_leave_dates);
@@ -65,6 +65,7 @@ function LeaveRequest() {
         // Sort by descending order (most recent date first)
         return dateA - dateB;
       });
+      console.log(sortedData)
       setUserProfiles(sortedData);
       setLoading(false);
     } catch (error) {
@@ -76,7 +77,7 @@ function LeaveRequest() {
   // const handleApprove = async (userId, date, email,daysofleave) => {
   //   try {
   //     const formattedDate = formatDateToYYYYMMDD(date);
-  //     await axios.put(`https://blitzlearning-lms.onrender.com/leaveapplications/approve/${userId}`, { date: formattedDate, email: email,daysofleave:daysofleave });
+  //     await axios.put(`http://localhost:4000/leaveapplications/approve/${userId}`, { date: formattedDate, email: email,daysofleave:daysofleave });
   //     fetchUserProfiles();
   //     alert(`Leave application for user with Employee Code ${userId} has been approved.`);
   //   } catch (error) {
@@ -87,7 +88,7 @@ function LeaveRequest() {
   // const handleReject = async (userId, date, email,daysofleave) => {
   //   try {
   //     const formattedDate = formatDateToYYYYMMDD(date);
-  //     await axios.put(`https://blitzlearning-lms.onrender.com/leaveapplications/reject/${userId}`, { date: formattedDate, email: email,daysofleave: daysofleave });
+  //     await axios.put(`http://localhost:4000/leaveapplications/reject/${userId}`, { date: formattedDate, email: email,daysofleave: daysofleave });
   //     fetchUserProfiles();
   //   } catch (error) {
   //     console.error(`Error rejecting leave application with ID ${userId}:`, error);
@@ -100,7 +101,7 @@ function LeaveRequest() {
   
     try {
       const formattedDate = formatDateToYYYYMMDD(date);
-      await axios.put(`https://blitzlearning-lms.onrender.com/leaveapplications/approve/${userId}`, {
+      await axios.put(`http://localhost:4000/leaveapplications/approve/${userId}`, {
         date: formattedDate,
         email: email,
         daysofleave: daysofleave,
@@ -118,7 +119,7 @@ function LeaveRequest() {
   
     try {
       const formattedDate = formatDateToYYYYMMDD(date);
-      await axios.put(`https://blitzlearning-lms.onrender.com/leaveapplications/reject/${userId}`, {
+      await axios.put(`http://localhost:4000/leaveapplications/reject/${userId}`, {
         date: formattedDate,
         email: email,
         daysofleave: daysofleave,
@@ -201,10 +202,10 @@ function LeaveRequest() {
                     <td data-label="Name">{profile.name}</td>
                     {/* <td>{profile.email}</td> */}
                     <td data-label="Applied Date">{formatDate(profile.applied_leave_dates)}</td>
-                    <td data-label="Leave Type">{profile.leavetype}</td>
-                    <td data-label="Start Date">{formatDate(profile.startdate)}</td>
-                    <td data-label="End Date">{formatDate(profile.enddate)}</td>
-                    <td data-label="No. of Days">{profile.daysofleave}</td>
+                    <td data-label="Leave Type">{profile.leave_type}</td>
+                    <td data-label="Start Date">{formatDate(profile.start_date)}</td>
+                    <td data-label="End Date">{formatDate(profile.end_date)}</td>
+                    <td data-label="No. of Days">{profile.days_of_leave}</td>
                     <td data-label="Status">{profile.status}</td>
                     {/* <td>{profile.leave_duration}</td> */}
                     <td data-label="Actions" className="leave-action-buttons">

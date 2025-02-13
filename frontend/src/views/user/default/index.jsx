@@ -82,6 +82,7 @@ const Dashboard = () => {
 
       const url = `http://localhost:4000/timesheet22?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`;
       const response = await axios.get(url);
+      console.log("asadaddf",response.data.timeSheet)
       setTimesheetData(response.data.timeSheet);
       setLeaveData(response.data.leaves);
       setLoading(false);
@@ -161,7 +162,7 @@ const Dashboard = () => {
   const handleTimeInClick = async () => {
     const now = new Date();
     const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const morningLimit = 16 * 3600 + 30 * 60; // 10:15:00 in seconds
+    const morningLimit = 20 * 3600 + 30 * 60; // 10:15:00 in seconds
     const afternoonStart = 13 * 3600; // 13:00:00 in seconds
     const afternoonEnd = 14 * 3600 + 30 * 60; // 14:30:00 in seconds
 
@@ -176,7 +177,7 @@ const Dashboard = () => {
         return;
       }
     } else if (currentTime > morningLimit) {
-      alert("The current time is after 16:30:00. You cannot Time In.");
+      alert("The current time is after 20:30:00. You cannot Time In.");
       return;
     }
     const confirmation = window.confirm("Are you sure you want to Time In?");

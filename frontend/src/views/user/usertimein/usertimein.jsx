@@ -32,12 +32,13 @@ function UserTimein() {
   const fetchUserProfiles = async (employeeCode) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`https://blitzlearning-lms.onrender.com/usertimeinDetails/${employeeCode}`);
-      const sortedData = response.data.sort((a, b) => {
-        const dateComparison = new Date(b.user_current_date) - new Date(a.user_current_date);
-        return dateComparison !== 0 ? dateComparison : a.name.localeCompare(b.name);
-      });
-      setUserProfiles(sortedData);
+      const response = await axios.get(`http://localhost:4000/usertimeinDetails/${employeeCode}`);
+      // const sortedData = response.data.sort((a, b) => {
+      //   const dateComparison = new Date(b.user_current_date) - new Date(a.user_current_date);
+      //   return dateComparison !== 0 ? dateComparison : a.name.localeCompare(b.name);
+      // });
+      console.log(response.data)
+      setUserProfiles(response.data);
     } catch (error) {
       console.error("Error fetching user profiles:", error);
     }
@@ -47,7 +48,7 @@ function UserTimein() {
   const fetchLeaveData = async (employeeCode) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://blitzlearning-lms.onrender.com/leavedetails/${employeeCode}`);
+      const response = await axios.get(`http://localhost:4000/leavedetails/${employeeCode}`);
       setLeaveData(response.data || []);
     } catch (error) {
       console.error("Error fetching leave data:", error);
@@ -70,7 +71,8 @@ function UserTimein() {
 
   const columns = [
     columnHelper.accessor("emp_code", { header: "Emp Code", cell: info => info.row.original.emp_code }),
-    columnHelper.accessor("name", { header: "Name", cell: info => info.row.original.name }),
+    columnHelper.accessor("name", { header: "Name", cell: info => info.row.original.username
+    }),
     columnHelper.accessor("user_current_date", { 
       header: "Date", 
       cell: info => formatDate(info.row.original.user_current_date) 
@@ -91,20 +93,20 @@ function UserTimein() {
         </span>
       ),
     }),
-    columnHelper.accessor("tea_break", {
-      header: "Tea Break",
-      cell: info => {
-        const profile = info.row.original;
-        return profile.tea_break && profile.tea_break_in ? `${profile.tea_break} to ${profile.tea_break_in}` : profile.tea_break || profile.tea_break_in || "--";
-      },
-    }),
-    columnHelper.accessor("smoking_break", {
-      header: "Lunch Break",
-      cell: info => {
-        const profile = info.row.original;
-        return profile.smoking_break && profile.smoking_break_in ? `${profile.smoking_break} to ${profile.smoking_break_in}` : profile.smoking_break || profile.smoking_break_in || "--";
-      },
-    }),
+    // columnHelper.accessor("tea_break", {
+    //   header: "Tea Break",
+    //   cell: info => {
+    //     const profile = info.row.original;
+    //     return profile.tea_break && profile.tea_break_in ? `${profile.tea_break} to ${profile.tea_break_in}` : profile.tea_break || profile.tea_break_in || "--";
+    //   },
+    // }),
+    // columnHelper.accessor("smoking_break", {
+    //   header: "Lunch Break",
+    //   cell: info => {
+    //     const profile = info.row.original;
+    //     return profile.smoking_break && profile.smoking_break_in ? `${profile.smoking_break} to ${profile.smoking_break_in}` : profile.smoking_break || profile.smoking_break_in || "--";
+    //   },
+    // }),
     columnHelper.accessor("totalMinutes", { 
       header: "Total Break Time", 
       cell: info => info.row.original.totalMinutes || "--" 

@@ -10,7 +10,7 @@ import {
   IoMdNotificationsOutline,
   IoMdInformationCircleOutline,
 } from "react-icons/io";
-import avatar from "assets/img/avatars/blitz.png";
+import avatar from "assets/img/avatars/avatarSimmmple.png";
 
 const AdminNavbar = (props) => {
   console.log("POP",props)

@@ -102,7 +102,7 @@ export function SidebarLinks() {
 </Link>
 
 
-        <Link to="/admin/leave-details">
+        {/* <Link to="/admin/leave-details">
           <div className="relative mb-3 flex hover:cursor-pointer">
             <li className="my-[3px] flex cursor-pointer items-center px-8">
               <span
@@ -128,7 +128,7 @@ export function SidebarLinks() {
               <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" />
             ) : null}
           </div>
-        </Link>
+        </Link> */}
 
         <Link to="/admin/time-in-details">
           <div className="relative mb-3 flex hover:cursor-pointer">

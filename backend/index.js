@@ -388,7 +388,7 @@ app.post('/timein', async (req, res) => {
       username: employeeUsername,
       emp_code: employeeCode,
       time_in: istTime,
-      time_out: '',
+      time_out: null,
       user_current_date: currentDate,
       latitude: latitude,
       longitude: longitude,
@@ -471,6 +471,157 @@ app.post('/timeout', async (req, res) => {
     res.status(500).json({ error: 'Error recording time out.' });
   }
 });
+
+function calculateTimeDifference(timeIn, timeOut) {
+  const timeInDate = new Date(timeIn);
+  const timeOutDate = new Date(timeOut);
+
+  // Check if both dates are valid
+  if (isNaN(timeInDate) || isNaN(timeOutDate)) {
+    return { totalMinutes: 0, hours: 0, minutes: 0 };
+  }
+
+  // Calculate the difference in milliseconds
+  const timeDifferenceMs = timeOutDate - timeInDate;
+
+  // Convert milliseconds to minutes
+  const totalMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+
+  // Optionally, convert minutes to hours and minutes format
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return { totalMinutes, hours, minutes };
+}
+
+function calculateRemainingMinutes1(fixedMinutes, totalMinutes) {
+  return fixedMinutes - totalMinutes;
+}
+
+app.get('/usertimeinDetails/:employeeCode', async (req, res) => {
+  const empCode = req.params.employeeCode;
+  try {
+    // Query the MongoDB collection for the user's time sheet details
+    const timeSheetData = await UserTimeSheet.find({
+      emp_code: empCode
+    });
+
+    const fixedMinutes = 60; // Example fixed minutes, adjust as needed
+
+    // Process the data and calculate time differences
+    const processedData = timeSheetData.map(row => {
+      // Add one day to user_current_date (if necessary)
+      const currentDate = new Date(row.user_current_date);
+      currentDate.setDate(currentDate.getDate()); // Adjust the current date as needed
+      row.user_current_date = currentDate.toISOString().split('T')[0];
+
+      // Ensure time_in and time_out are present before calculating the difference
+      if (row.time_in && row.time_out) {
+        // Calculate the time difference between time_in and time_out
+        const { totalMinutes, hours, minutes } = calculateTimeDifference(row.time_in, row.time_out);
+
+        // Calculate remaining minutes
+        const remainingMinutes = calculateRemainingMinutes1(fixedMinutes, totalMinutes);
+
+        return {
+          ...row.toObject(), // Get the raw document data (MongoDB documents have toObject() method)
+          totalMinutes,
+          hours,
+          minutes,
+          remainingMinutes
+        };
+      } else {
+        // Handle missing time_in or time_out (optional)
+        return {
+          ...row.toObject(),
+          totalMinutes: 0,
+          hours: 0,
+          minutes: 0,
+          remainingMinutes: 0
+        };
+      }
+    });
+
+    console.log(processedData); // Debugging log to see the processed data
+    res.json(processedData);
+  } catch (err) {
+    console.error('Error fetching user profiles:', err);
+    res.status(500).json({ error: 'An error occurred while fetching user profiles' });
+  }
+});
+
+app.get('/leaveapplications', async (req, res) => {
+  try {
+    console.log(req.body); // This logs the incoming request body, if needed for debugging
+
+    // Fetch leave applications from the 'LeaveApplication' collection
+    const leaveApplications = await LeaveApplication.find();
+
+    // Return leave application data directly
+    const processedData = leaveApplications.map(leaveApp => {
+      return {
+        ...leaveApp.toObject(), // Get the raw data from the leave application
+        userData: {
+          name: '', // Empty string since no user data is fetched
+          email: '', // Empty string since no user data is fetched
+          data: '' // Empty string since no user data is fetched
+        }
+      };
+    });
+
+    // Send the processed data as the response
+    res.json(processedData);
+  } catch (err) {
+    console.error('Error fetching leave applications:', err);
+    res.status(500).json({ error: 'Error fetching leave applications' });
+  }
+});
+
+app.get('/timeinDetails', async (req, res) => {
+  try {
+    // Query to fetch time sheet details from the 'UserTimeSheet' collection
+    const timeSheetData = await UserTimeSheet.find({});
+
+    // Directly return the time sheet data without any calculations
+    res.json(timeSheetData);
+  } catch (err) {
+    console.error('Error fetching user profiles:', err);
+    res.status(500).json({ error: 'An error occurred while fetching user profiles' });
+  }
+});
+async function handleLeaveApplicationUpdate(req, res, status) {
+  try {
+    const { emp_code } = req.params;
+    const { date, daysofleave } = req.body;
+    console.log("Request Body:", req.body, emp_code);
+
+    // Fetch leave application data from MongoDB
+    const leaveApplication = await LeaveApplication.findOne({ emp_code, applied_leave_dates: date });
+
+    if (!leaveApplication) {
+      return res.status(404).send("Leave application not found");
+    }
+
+    // Update leave application status in MongoDB
+    leaveApplication.status = status;
+    await leaveApplication.save();
+
+    console.log("Status updated successfully");
+    res.status(200).send("Status updated successfully");
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send("Error updating status");
+  }
+}
+
+app.put('/leaveapplications/approve/:emp_code', (req, res) => {
+  handleLeaveApplicationUpdate(req, res, 'Approved');
+});
+
+app.put('/leaveapplications/reject/:emp_code', (req, res) => {
+  handleLeaveApplicationUpdate(req, res, 'Rejected');
+});
+
 
 
 

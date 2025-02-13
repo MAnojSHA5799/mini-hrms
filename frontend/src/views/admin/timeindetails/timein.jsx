@@ -51,7 +51,7 @@ function TimeInDetails() {
   const fetchUserProfiles = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("https://blitzlearning-lms.onrender.com/timeinDetails");
+      const response = await axios.get("http://localhost:4000/timeinDetails");
       const sortedData = response.data.sort((a, b) => {
         // First, compare by date in descending order
         const dateComparison =
@@ -84,7 +84,7 @@ function TimeInDetails() {
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("https://blitzlearning-lms.onrender.com/employees");
+      const response = await axios.get("http://localhost:4000/employees");
       // Sort employees alphabetically by name
       const sortedEmployees = response.data.sort((a, b) =>
         a.name.localeCompare(b.name)
@@ -318,9 +318,9 @@ function TimeInDetails() {
                         <th>Date</th>
                         <th>Time In</th>
                         <th>Time Out</th>
-                        <th>Tea Break-1</th>
+                        {/* <th>Tea Break-1</th>
                         <th>Tea Break-2</th>
-                        <th>Lunch Break</th>
+                        <th>Lunch Break</th> */}
                         <th>Taking Break Time</th>
                       </tr>
                     </thead>
@@ -332,7 +332,7 @@ function TimeInDetails() {
                           </td>{" "}
                           {/* Display serial number */}
                           {/* <td>{profile.emp_code}</td> */}
-                          <td data-label="Name">{profile.name}</td>
+                          <td data-label="Name">{profile.username}</td>
                           <td data-label="Date">{formatDate(profile.user_current_date)}</td>
                           <td data-label="Time In">
                             {profile.time_in ? (
@@ -376,7 +376,7 @@ function TimeInDetails() {
                               <span>--</span>
                             )}
                           </td>
-                          <td data-label="Tea Break 1">
+                          {/* <td data-label="Tea Break 1">
                             {profile.tea_break && profile.tea_break_in ? (
                               <>
                                 {profile.tea_break} to {profile.tea_break_in}
@@ -388,8 +388,8 @@ function TimeInDetails() {
                             ) : (
                               <span>--</span>
                             )}
-                          </td>
-                          <td data-label="Tea Break 2">
+                          </td> */}
+                          {/* <td data-label="Tea Break 2">
                             {profile.tea_break_two &&
                             profile.tea_break_two_in ? (
                               <>
@@ -403,8 +403,8 @@ function TimeInDetails() {
                             ) : (
                               <span>--</span>
                             )}
-                          </td>
-                          <td data-label="Lunch Break">
+                          </td> */}
+                          {/* <td data-label="Lunch Break">
                             {profile.smoking_break &&
                             profile.smoking_break_in ? (
                               <>
@@ -418,7 +418,7 @@ function TimeInDetails() {
                             ) : (
                               <span>--</span>
                             )}
-                          </td>
+                          </td> */}
                           <td data-label="Total Minutes">
                             {profile.totalMinutes ? (
                               <>{profile.totalMinutes}</>
