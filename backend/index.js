@@ -418,8 +418,9 @@ app.post('/timein', async (req, res) => {
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
     const istTime = new Date(utcTime.getTime() + istOffset);
     const istTimeString = istTime.toISOString().slice(0, 19).replace('T', ' ');  // Format to 'YYYY-MM-DD HH:mm:ss'
-    const currentDateLocal = new Date().toLocaleDateString("en-CA");  // Local date in YYYY-MM-DD format
-console.log(currentDateLocal);
+//     const currentDateLocal = new Date().toLocaleDateString("en-CA");  // Local date in YYYY-MM-DD format
+// console.log(currentDateLocal);
+   const currentDate = new Date().toISOString().slice(0, 10);
 
 
     // Create a new user time sheet document
@@ -428,7 +429,7 @@ console.log(currentDateLocal);
       emp_code: employeeCode,
       time_in: istTime,
       time_out: null,
-      user_current_date: currentDateLocal,
+      user_current_date: currentDate,
       latitude: latitude,
       longitude: longitude,
     });
