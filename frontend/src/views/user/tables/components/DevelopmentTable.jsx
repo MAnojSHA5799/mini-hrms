@@ -37,7 +37,7 @@ function CheckTable() {
 
   const fetchLeaveData = async (employeeCode) => {
     try {
-      const url = `https://mini-hrms.onrender.com/leavedetails/${employeeCode}`;
+      const url = `http://localhost:4000/leavedetails/${employeeCode}`;
       const response = await axios.get(url);
       console.log(response.data)
       setLeaveData(response.data);
@@ -63,7 +63,7 @@ function CheckTable() {
   //   console.log("del",leave)
   //   if (window.confirm('Do you want to delete this leave application?')) {
   //     try {
-  //       await axios.delete(`https://mini-hrms.onrender.com/leavedetails/delete/${leave.id}`, { data: leave });
+  //       await axios.delete(`http://localhost:4000/leavedetails/delete/${leave.id}`, { data: leave });
   //       alert('Leave detail deleted successfully');
   //       fetchLeaveData(users.emp_code);
   //     } catch (error) {
@@ -87,7 +87,7 @@ function CheckTable() {
     }
   
     try {
-      const url = `https://mini-hrms.onrender.com/leavedetails/delete/${cleanedLeave.name}`;
+      const url = `http://localhost:4000/leavedetails/delete/${cleanedLeave.name}`;
       await axios.delete(url, { data: cleanedLeave });
       alert('Leave detail deleted successfully');
       fetchLeaveData(users.emp_code); // Refresh data after deletion
@@ -119,13 +119,13 @@ function CheckTable() {
             <thead>
               <tr>
                 <th>Emp Code</th>
-                <th>Profile</th>
+                {/* <th>Profile</th> */}
                 <th>Name</th>
                 <th>Applied Dates</th>
                 <th>Leave Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                {/* <th>Days of leave</th> */}
+                <th>Days of leave</th>
                 <th>Status</th>
                 {/* <th>Actions</th> */}
               </tr>
@@ -144,7 +144,7 @@ function CheckTable() {
                 leaveData.map((leave, index) => (
                   <tr key={index}>
                     <td>{leave.emp_code}</td>
-                    <td>
+                    {/* <td>
                       <div className="profile-avatar">
                         {leave &&
                           leave.data &&
@@ -160,13 +160,13 @@ function CheckTable() {
                             );
                           })()}
                       </div>
-                    </td>
+                    </td> */}
                     <td>{leave.name}</td>
                     <td>{formatDate(leave.applied_leave_dates)}</td>
                     <td>{leave.leave_type}</td>
                     <td>{formatDate(leave.start_date)}</td>
                     <td>{formatDate(leave.end_date)}</td>
-                    {/* <td>{leave.daysofleave}</td> */}
+                    <td>{leave.days_of_leave}</td>
                     <td className="status">
                       {leave.status === "Pending" && (
                         <span className="pending">{leave.status}</span>

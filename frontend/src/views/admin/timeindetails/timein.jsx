@@ -51,7 +51,7 @@ function TimeInDetails() {
   const fetchUserProfiles = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("https://mini-hrms.onrender.com/timeinDetails");
+      const response = await axios.get("http://localhost:4000/timeinDetails");
       const sortedData = response.data.sort((a, b) => {
         // First, compare by date in descending order
         const dateComparison =
@@ -59,21 +59,26 @@ function TimeInDetails() {
         if (dateComparison !== 0) {
           return dateComparison;
         }
+  
+        // Check if name exists before calling localeCompare
+        const nameA = a.name || '';  // Default to empty string if 'name' is undefined
+        const nameB = b.name || '';  // Default to empty string if 'name' is undefined
+  
         // If dates are the same, compare alphabetically by name
-        return a.name.localeCompare(b.name);
+        return nameA.localeCompare(nameB);
       });
-
+  
       // Filter profiles based on today's date
       const today = new Date().toISOString().split("T")[0];
       const todayProfiles = sortedData.filter(
         (profile) => profile.user_current_date.split("T")[0] === today
       );
-
+  
       // Update profilesPerPage dynamically
       const newProfilesPerPage =
         todayProfiles.length > 0 ? Math.min(15, todayProfiles.length) : 15;
       setProfilesPerPage(newProfilesPerPage);
-
+  
       setUserProfiles(sortedData);
       setFilteredProfiles(sortedData);
     } catch (error) {
@@ -81,19 +86,22 @@ function TimeInDetails() {
     }
     setIsLoading(false);
   };
-
+  
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("https://mini-hrms.onrender.com/employees");
-      // Sort employees alphabetically by name
-      const sortedEmployees = response.data.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
+      const response = await axios.get("http://localhost:4000/employees");
+      // Sort employees alphabetically by name (ensure 'name' field exists)
+      const sortedEmployees = response.data.sort((a, b) => {
+        const nameA = a.name || '';  // Default to empty string if 'name' is undefined
+        const nameB = b.name || '';  // Default to empty string if 'name' is undefined
+        return nameA.localeCompare(nameB);
+      });
       setEmployees(sortedEmployees);
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
   };
+  
 
   const handleDateFilter = () => {
     let filtered = userProfiles;
@@ -162,7 +170,7 @@ function TimeInDetails() {
     <>
       <Card extra={"mt-5 w-full h-full sm:overflow-auto px-8"}>
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-6 2xl:grid-cols-6 6xl:grid-cols-6">
-      <Form.Group controlId="startDate">
+      {/* <Form.Group controlId="startDate">
                       <Form.Label style={{ fontWeight: "bold" }}>
                         Start Date
                       </Form.Label>
@@ -172,9 +180,9 @@ function TimeInDetails() {
                         onChange={(e) => setStartDate(e.target.value)}
                         style={{ height: "40px" }}
                       />
-                    </Form.Group>
+                    </Form.Group> */}
 
-                    <Form.Group controlId="endDate">
+                    {/* <Form.Group controlId="endDate">
                       <Form.Label style={{ fontWeight: "bold" }}>
                         End Date
                       </Form.Label>
@@ -184,9 +192,9 @@ function TimeInDetails() {
                         onChange={(e) => setEndDate(e.target.value)}
                         style={{ height: "40px" }}
                       />
-                    </Form.Group>
+                    </Form.Group> */}
 
-                    <Form.Group controlId="selectEmployee">
+                    {/* <Form.Group controlId="selectEmployee">
                       <Form.Label style={{ fontWeight: "bold" }}>
                         Select Employee
                       </Form.Label>
@@ -206,8 +214,8 @@ function TimeInDetails() {
                           </option>
                         ))}
                       </Form.Control>
-                    </Form.Group>
-                    <Button
+                    </Form.Group> */}
+                    {/* <Button
                       onClick={handleDateFilter}
                       style={{
                         height: "40px",
@@ -226,8 +234,8 @@ function TimeInDetails() {
                     style={{ marginRight: "8px" }}
                   ></i>
                       Filter
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
                       onClick={(e) => clearFilters(e)}
                       style={{
                         height: "40px",
@@ -246,7 +254,7 @@ function TimeInDetails() {
                     style={{ marginRight: "8px" }}
                   ></i>
                       Clear
-                    </Button>
+                    </Button> */}
                     {/* <CSVLink
                       data={filteredProfiles}
                       filename={`timein-details-${startDate}-to-${endDate}.csv`}
@@ -268,7 +276,7 @@ function TimeInDetails() {
                       ></i>
                       Download CSV
                     </CSVLink> */}
-                    <CSVLink
+                    {/* <CSVLink
   data={filteredProfiles}
   filename={`timein-details-${startDate}-to-${endDate}.csv`}
   className="btn d-flex justify-content-center align-items-center"
@@ -291,7 +299,7 @@ function TimeInDetails() {
     style={{ marginRight: "8px" }}
   ></i>
   Download CSV
-</CSVLink>
+</CSVLink> */}
 
 
       </div>
@@ -349,7 +357,7 @@ function TimeInDetails() {
                                   borderRadius: "3px",
                                 }}
                               >
-                                {profile.time_in}
+                                {profile.time_in ? profile.time_in.slice(11, 19)  : "Not Time in"}
                               </span>
                             ) : (
                               <span>--</span>
@@ -370,7 +378,8 @@ function TimeInDetails() {
                                   borderRadius: "3px",
                                 }}
                               >
-                                {profile.time_out}
+                                {profile.time_out ? profile.time_out.slice(11, 19)  : "Not Time out"}
+
                               </span>
                             ) : (
                               <span>--</span>

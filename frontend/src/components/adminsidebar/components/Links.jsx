@@ -186,12 +186,12 @@ export function SidebarLinks() {
           </div>
         </Link>
 
-        {/* <Link to="/admin/calendar">
+        <Link to="/admin/payroll">
           <div className="relative mb-3 flex hover:cursor-pointer">
             <li className="my-[3px] flex cursor-pointer items-center px-8">
               <span
                 className={`${
-                  activeRoute("/admin/calendar")
+                  activeRoute("/admin/payroll")
                     ? "font-bold text-brand-500 dark:text-white"
                     : "font-medium text-gray-600"
                 }`}
@@ -200,19 +200,19 @@ export function SidebarLinks() {
               </span>
               <p
                 className={`leading-1 ml-4 flex ${
-                  activeRoute("/admin/calendar")
+                  activeRoute("/admin/payroll")
                     ? "font-bold text-navy-700 dark:text-white"
                     : "font-medium text-gray-600"
                 }`}
               >
-                BLITZ CALENDAR
+                ALL EMPLOYEE PAYROLL
               </p>
             </li>
-            {activeRoute("/admin/calendar") ? (
+            {activeRoute("/admin/payroll") ? (
               <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" />
             ) : null}
           </div>
-        </Link> */}
+        </Link>
 
       </>
     );

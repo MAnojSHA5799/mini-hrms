@@ -1,55 +1,88 @@
-import React, { useEffect, useState } from "react";
-import { Form, Button, Spinner, Alert } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import festivaldata from "../festivalData";
-import calendar from "../../../../src/assets/img/calendar/image.png"
-import { Container, Image } from 'react-bootstrap';
+import Widget from "components/widget/Widget";
+import { MdBarChart, MdDashboard } from "react-icons/md";
+import { IoDocuments } from "react-icons/io5";
 
-
-const BlitzCalendar = ({ festivalData: propFestivalData }) => {
-  const [festivalData, setFestivalData] = useState(festivaldata);
-  const [leaveType, setLeaveType] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [reason, setReason] = useState("");
-  const [email, setEmail] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+const BlitzCalendar = () => {
+  const [salary, setSalary] = useState(20000);
+  const [workDays, setWorkDays] = useState(27);
   const [leaveData, setLeaveData] = useState([]);
-  const [applyDate, setApplyDate] = useState([]);
-  const [users, setUser] = useState(null);
-  const [empCode, setEmpCode] = useState();
-  const [loading, setLoading] = useState(true);
-  const [depart, setDepart] = useState([]);
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [leaveDuration, setLeaveDuration] = useState("full");
-  useEffect(() => {
-    const storedUser = localStorage.getItem("admin");
-    if (storedUser) {
-      const admin = JSON.parse(storedUser);
-      setUser(admin);
-      setEmpCode(admin.emp_code);
-      setEmail(admin.email);
-      setDepart(admin.department);
-    }
+  const [calculatedSalary, setCalculatedSalary] = useState(0);
+  const [user, setUser] = useState(null);
+  const [empCode, setEmpCode] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
-    const employeeCode = JSON.parse(storedUser).emp_code;
-    if (employeeCode) {
-    //   fetchLeaveData(employeeCode);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setEmpCode(parsedUser.emp_code);
+      fetchLeaveData(parsedUser.emp_code);
     }
   }, []);
 
-  
+  const fetchLeaveData = async (employeeCode) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/allpayroll`);
+      console.log(response.data);
+      setLeaveData(response.data.employeeLeaveData); // Assuming response has employeeLeaveData
+      setIsLoading(false); // Stop loading
+
+      // Calculate total leaves and present days for each employee
+      response.data.employeeLeaveData.forEach((employee) => {
+        const totalLeaves = employee.total_days_of_leave || 0;
+        const presentDays = workDays - totalLeaves;
+        const calculatedSalary = (salary / workDays) * presentDays;
+        setCalculatedSalary((prevState) => ({
+          ...prevState,
+          [employee.emp_code]: calculatedSalary.toFixed(2), // Storing salary for each employee
+        }));
+      });
+    } catch (error) {
+      console.error("Error fetching leave data:", error);
+      setIsLoading(false); // Stop loading on error
+    }
+  };
+
   return (
     <div>
-     
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-1 lg:grid-cols-1 2xl:grid-cols-1 3xl:grid-cols-1">  
-      <Image style={{ height: '100%', width: '100%' }} className="logo" src={calendar} alt="Logo" />
-      </div>
-  </div>
+      {isLoading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          <table className="mt-3">
+            <thead className="text-center">
+              <tr>
+                <th>Sn. no</th>
+                <th>Name</th>
+                <th>Total workDays</th>
+                <th>Total Days of Leave</th>
+                <th>Present Days</th>
+                <th>Calculated Salary</th>
+              </tr>
+            </thead>
+            <tbody className="text-center">
+              {leaveData.map((employee, index) => (
+                <tr key={employee.emp_code}>
+                  <td>{index + 1}</td>
+                  <td>{employee.name}</td>
+                  <td>{workDays}</td>
+                  <td>{employee.total_days_of_leave}</td>
+                  <td>{workDays - employee.total_days_of_leave}</td>
+                  <td>{calculatedSalary[employee.emp_code]}</td> {/* Displaying the calculated salary */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+    </div>
   );
 };
 

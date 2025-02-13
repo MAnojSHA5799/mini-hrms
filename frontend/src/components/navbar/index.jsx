@@ -97,11 +97,9 @@ const Navbar = (props) => {
         </div> */}
         <Dropdown
           button={
-            <img
-              className="h-10 w-10 rounded-full"
-              src={base64String ? `data:image/png;base64,${base64String}` : avatar}
-              alt={storedUser ? storedUser.name : "User Avatar"}
-            />
+           
+                       <img className="h-10 w-10 rounded-full" src={storedUser ? storedUser.profile_picture : avatar} alt="Profile" /> 
+
           }
           children={
             <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">

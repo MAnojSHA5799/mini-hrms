@@ -136,68 +136,104 @@ app.post("/adminlogin", async (req, res) => {
 
 // Usered Login
 app.post("/userlogin", async (req, res) => {
-    try {
-      const { name, password } = req.body;
-      console.log("Request Body:", req.body);  // Log the incoming request body
-  
-      const usered = await Usered.findOne({ name: name });
-      console.log("Usered from DB:", usered);  // Log the user fetched from the database
-  
-      if (!usered || !(await bcrypt.compare(password, usered.password))) {
-        console.log("Invalid username or password");
-        return res.status(401).json({ success: false, error: "Incorrect username or password" });
-      }
-  
-      const token = jwt.sign({ userId: usered._id, username: usered.name }, JWT_SECRET, { expiresIn: "1h" });
-      console.log("Generated JWT Token:", token);  // Log the generated JWT token
-  
-      res.json({ success: true, token, usered });
-    } catch (error) {
-      console.error("User Login Error:", error);
-      res.status(500).json({ error: "An error occurred while processing your request" });
+  try {
+    const { name, password } = req.body;
+    console.log("Request Body:", req.body);  // Log the incoming request body
+
+    const usered = await Usered.findOne({ name: name });  // Search for user by name
+    console.log("Usered from DB:", usered);  // Log the user fetched from the database
+
+    if (!usered || !(await bcrypt.compare(password, usered.password))) {
+      console.log("Invalid username or password");
+      return res.status(401).json({ success: false, error: "Incorrect username or password" });
     }
-  });
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: usered._id, username: usered.name }, JWT_SECRET, { expiresIn: "1h" });
+    console.log("Generated JWT Token:", token);  // Log the generated JWT token
+
+    // Return the user data, including the image URL (img or profile_picture)
+    res.json({ 
+      success: true, 
+      token, 
+      usered: {
+        ...usered._doc,  // Spread to include all user fields
+        profile_picture: usered.profile_picture  // Send the image URL in the response
+      } 
+    });
+  } catch (error) {
+    console.error("User Login Error:", error);
+    res.status(500).json({ error: "An error occurred while processing your request" });
+  }
+});
+
   
 
 const storage = multer.memoryStorage(); // Store image in memory buffer
 const upload = multer({ storage });
 
-app.post("/add-user", upload.single("profile_picture"), async (req, res) => {
-    try {
-      console.log(req.body);
-  
-      const {
-        emp_code, name, contact, email, aadhaar, pan,
-        bank_details, emergency_contact, address, dob,
-        dateofjoining, designation, department, password // Include password
-      } = req.body;
-  
-      // Hash the password before saving it
-      const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
-  
-      // Convert image to base64
-      let profile_picture = null;
-      if (req.file) {
-        profile_picture = req.file.buffer.toString("base64"); // Convert to Base64 string
-      }
-  
-      // Create new user with hashed password and image data
-      const newUsered = new Usered({
-        emp_code, name, contact, email, aadhaar, pan,
-        bank_details, emergency_contact, address, dob,
-        dateofjoining, designation, department,
-        profile_picture,
-        password: hashedPassword, // Save the hashed password
-      });
-  
-      await newUsered.save();
-  
-      res.status(201).json({ message: "User added successfully!" });
-    } catch (error) {
-      console.error("Error saving user details:", error);
-      res.status(500).json({ error: "Error saving user details" });
+app.post("/add-user", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    const {
+      emp_code, name, contact, email, aadhaar, pan,
+      bank_details, emergency_contact, address, dob,
+      dateofjoining, designation, department, password,profile_picture
+    } = req.body;
+
+    // Check if emp_code or name already exists
+    const existingUser = await Usered.findOne({
+      $or: [{ emp_code }, { name }]
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Employee Code or Name already exists" });
     }
-  });
+
+    // Hash the password before saving it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // // Convert image to base64
+    // let profile_picture = null;
+    // if (req.file) {
+    //   profile_picture = req.file.buffer.toString("base64");
+    // }
+
+    // Create new user
+    const newUsered = new Usered({
+      emp_code, name, contact, email, aadhaar, pan,
+      bank_details, emergency_contact, address, dob,
+      dateofjoining, designation, department,
+      password: hashedPassword,
+      profile_picture,
+    });
+
+    await newUsered.save();
+    res.status(201).json({ message: "User added successfully!" });
+
+  } catch (error) {
+    console.error("Error saving user details:", error);
+    res.status(500).json({ error: "Error saving user details" });
+  }
+});
+app.post("/check-user", async (req, res) => {
+  try {
+    const { emp_code, name } = req.body;
+    const existingUser = await Usered.findOne({
+      $or: [{ emp_code }, { name }]
+    });
+
+    if (existingUser) {
+      return res.json({ exists: true });
+    }
+
+    res.json({ exists: false });
+  } catch (error) {
+    console.error("Error checking user existence:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
   app.get('/userProfiles', async (req, res) => {
     try {
@@ -313,7 +349,7 @@ app.post("/add-user", upload.single("profile_picture"), async (req, res) => {
   
       // Fetch leave details from leave_application collection
       const results = await LeaveApplication.find({ emp_code: empCode });
-  console.log(results)
+  console.log("316",results)
       res.json(results);
     } catch (err) {
       console.error('Error fetching leave data: ', err);
@@ -382,7 +418,9 @@ app.post('/timein', async (req, res) => {
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
     const istTime = new Date(utcTime.getTime() + istOffset);
     const istTimeString = istTime.toISOString().slice(0, 19).replace('T', ' ');  // Format to 'YYYY-MM-DD HH:mm:ss'
-    const currentDate = new Date().toISOString().slice(0, 10);  // Get only the date portion 'YYYY-MM-DD'
+    const currentDateLocal = new Date().toLocaleDateString("en-CA");  // Local date in YYYY-MM-DD format
+console.log(currentDateLocal);
+
 
     // Create a new user time sheet document
     const newTimeSheet = new UserTimeSheet({
@@ -390,11 +428,11 @@ app.post('/timein', async (req, res) => {
       emp_code: employeeCode,
       time_in: istTime,
       time_out: null,
-      user_current_date: currentDate,
+      user_current_date: currentDateLocal,
       latitude: latitude,
       longitude: longitude,
     });
-
+console.log(newTimeSheet);
     // Save the new time sheet document to MongoDB
     await newTimeSheet.save();
 
@@ -409,7 +447,7 @@ app.get('/timesheet22', async (req, res) => {
   try {
     const { employeeCode, employeeUsername } = req.query;
 
-    const todayDate = new Date().toISOString().slice(0, 10);
+    const todayDate = new Date().toLocaleDateString("en-CA"); // Local date in YYYY-MM-DD format
     console.log("1229", todayDate);
 
     // Query to get time sheet details for the given employee and date
@@ -623,7 +661,98 @@ app.put('/leaveapplications/reject/:emp_code', (req, res) => {
   handleLeaveApplicationUpdate(req, res, 'Rejected');
 });
 
+app.get("/payroll", async (req, res) => {
+  try {
+    const { emp_code } = req.query;
+    
+    if (!emp_code) {
+      console.log("❌ Missing emp_code in request");
+      return res.status(400).json({ error: "Employee code is required" });
+    }
 
+    console.log(`🔍 Fetching payroll data for emp_code: ${emp_code}`);
+
+    const leaves = await LeaveApplication.find({ emp_code });
+
+    if (leaves.length === 0) {
+      console.log(`⚠️ No payroll data found for emp_code: ${emp_code}`);
+      return res.status(200).json({ message: "No payroll data found", total_days_of_leave: 0, leaves: [] });
+    }
+
+    // Calculate total days_of_leave
+    const totalDaysOfLeave = leaves.reduce((sum, record) => sum + record.days_of_leave, 0);
+
+    console.log(`✅ Payroll Data for emp_code ${emp_code}:`, JSON.stringify(leaves, null, 2));
+    console.log(`📊 Total Days of Leave for emp_code ${emp_code}: ${totalDaysOfLeave}`);
+
+    res.status(200).json({ total_days_of_leave: totalDaysOfLeave, leaves });
+  } catch (error) {
+    console.error("❌ Error fetching payroll data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/allpayroll", async (req, res) => {
+  try {
+    console.log("🔍 Fetching payroll data for all employees");
+
+    // Fetch all leave records
+    const leaves = await LeaveApplication.find();
+
+    if (leaves.length === 0) {
+      console.log("⚠️ No payroll data found for any employees");
+      return res.status(200).json({ message: "No payroll data found", total_days_of_leave: 0, leaves: [] });
+    }
+
+    // Calculate total days of leave for each employee
+    const employeeLeaveData = [];
+
+    // Group leave records by employee
+    const groupedLeaves = leaves.reduce((acc, record) => {
+      const empCode = record.emp_code;
+      if (!acc[empCode]) {
+        acc[empCode] = {
+          emp_code: empCode,
+          name: record.name,
+          total_days_of_leave: 0,
+          leaves: []
+        };
+      }
+      acc[empCode].total_days_of_leave += record.days_of_leave;
+      acc[empCode].leaves.push(record);
+      return acc;
+    }, {});
+
+    // Prepare data to send in the response
+    for (let empCode in groupedLeaves) {
+      employeeLeaveData.push(groupedLeaves[empCode]);
+    }
+
+    console.log("✅ Payroll Data for all employees:", JSON.stringify(employeeLeaveData, null, 2));
+
+    res.status(200).json({ employeeLeaveData });
+  } catch (error) {
+    console.error("❌ Error fetching payroll data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get('/employees', async (req, res) => {
+  try {
+    // Replace this SQL query with MongoDB query
+    const employees = await UserTimeSheet.find({});  // Fetch emp_code and name fields
+
+    if (employees.length === 0) {
+      return res.status(404).json({ message: 'No employees found' });
+    }
+console.log("749",employees)
+    res.json(employees);
+  } catch (err) {
+    console.error('Error fetching user profiles:', err);
+    res.status(500).json({ error: 'Error fetching user profiles' });
+  }
+});
 
 
 // Update Usered (Protected)

@@ -26,6 +26,7 @@ function LeaveForm() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
+      console.log("store",parsedUser)
       setUsers(parsedUser);
       setEmpCode(parsedUser.emp_code);
       setEmail(parsedUser.email);
@@ -46,11 +47,12 @@ function LeaveForm() {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://mini-hrms.onrender.com/leavedetails/${employeeCode}`
+        `http://localhost:4000/leavedetails/${employeeCode}`
       );
       const leaveDates = response.data.map((leave) =>
         new Date(leave.applied_leave_dates).toISOString().slice(0, 10)
       );
+      console.log("54",leaveDates)
       setApplyDate(leaveDates);
     } catch (error) {
       console.error("Error fetching leave data:", error);
@@ -131,9 +133,9 @@ function LeaveForm() {
       depart,
       leaveDuration,
     };
-console.log("AAA",leaveRequest)
+
     try {
-      await axios.post("https://mini-hrms.onrender.com/leave-applications", leaveRequest);
+      await axios.post("http://localhost:4000/leave-applications", leaveRequest);
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
@@ -149,170 +151,171 @@ console.log("AAA",leaveRequest)
       setLoadingSubmit(false);
     }
   };
-  
 
   return (
     <div className="mt-3 grid grid-cols-1 gap-5">
-    <div className="leave-form-container">
-      <h2>Leave Form Request</h2>
-      {loading ? (
-        <div
-        style={{
-          width: "100%",
-          maxWidth: "600px",
-          margin: "20px auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "720px",
-        }}
-      >
-        {console.log("L1",applyDate,"T1",todayDate)}
-        <Spinner animation="border" variant="primary" />
+      <div className="leave-form-container">
+        <h2>Leave Form Request</h2>
+         {/* {loading ? (
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "600px",
+              margin: "20px auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "720px",
+            }}
+          >
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : applyDate.includes(todayDate) ? (
+          <Alert
+            variant="danger"
+            style={{
+              width: "100%",
+              maxWidth: "600px",
+              margin: "20px auto",
+              border: "2px solid white",
+              height: "130px",
+            }}
+          >
+            You can apply for leave only once in one day.
+          </Alert>
+        ) : (  */}
+          <form onSubmit={handleSubmit}>
+            <Form.Group controlId="name">
+              <Form.Label style={{ fontWeight: "bold" }}>Name:</Form.Label>
+              <Form.Control
+                type="text"
+                value={users ? users.name : ""}
+                readOnly
+              />
+            </Form.Group>
+
+            <Form.Group controlId="leaveType">
+              <Form.Label style={{ fontWeight: "bold" }}>Leave Type:</Form.Label>
+              <br />
+              <Form.Select
+                style={{ fontWeight: "/", width: "100%", height: "35px" }}
+                value={leaveType}
+                onChange={(e) => setLeaveType(e.target.value)}
+                required
+              >
+                <option value="">Please select leave type</option>
+                <option value="Casual Leave (CL)">Casual Leave (CL)</option>
+                <option value="Sick Leave (SL)">Sick Leave (SL)</option>
+                <option value="Earned Leave">Earned Leave</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group controlId="leaveDuration">
+              <Form.Label style={{ fontWeight: "bold" }}>Leave Duration:</Form.Label>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Form.Check
+                  type="checkbox"
+                  label="Full Day"
+                  name="leaveDuration"
+                  value="full"
+                  checked={leaveDuration.includes("full")}
+                  onChange={() =>
+                    setLeaveDuration((prev) =>
+                      prev.includes("full") ? prev.filter((d) => d !== "full") : [...prev, "full"]
+                    )
+                  }
+                  style={{ marginRight: "10px" }}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="First Half"
+                  name="leaveDuration"
+                  value="firstHalf"
+                  checked={leaveDuration.includes("firstHalf")}
+                  onChange={() =>
+                    setLeaveDuration((prev) =>
+                      prev.includes("firstHalf") ? prev.filter((d) => d !== "firstHalf") : [...prev, "firstHalf"]
+                    )
+                  }
+                  style={{ marginRight: "10px" }}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Second Half"
+                  name="leaveDuration"
+                  value="secondHalf"
+                  checked={leaveDuration.includes("secondHalf")}
+                  onChange={() =>
+                    setLeaveDuration((prev) =>
+                      prev.includes("secondHalf") ? prev.filter((d) => d !== "secondHalf") : [...prev, "secondHalf"]
+                    )
+                  }
+                />
+              </div>
+            </Form.Group>
+
+            <Form.Group controlId="empCode">
+              <Form.Label style={{ fontWeight: "bold" }}>Emp Code:</Form.Label>
+              <Form.Control type="text" value={empCode} readOnly />
+            </Form.Group>
+
+            <Form.Group controlId="email">
+              <Form.Label style={{ fontWeight: "bold" }}>Email:</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="depart">
+              <Form.Label style={{ fontWeight: "bold" }}>Department:</Form.Label>
+              <Form.Control type="text" value={depart} readOnly />
+            </Form.Group>
+
+            <Form.Group controlId="startDate">
+              <Form.Label style={{ fontWeight: "bold" }}>Start Date:</Form.Label>
+              <Form.Control
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+                min={todayDate}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="endDate">
+              <Form.Label style={{ fontWeight: "bold" }}>End Date:</Form.Label>
+              <Form.Control
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+                min={startDate ? startDate : todayDate}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="reason">
+              <Form.Label style={{ fontWeight: "bold" }}>Reason:</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Button variant="primary" type="submit" disabled={loadingSubmit}>
+              {loadingSubmit ? <Spinner as="span" animation="border" size="sm" /> : "Submit"}
+            </Button>
+          </form>
+        {/* )} */}
+        {showAlert && <Alert variant="success">Leave application submitted successfully!</Alert>}
+        {showErrorAlert && <Alert variant="danger">Error submitting leave application. Please try again.</Alert>}
       </div>
-      
-      ) : applyDate.includes(todayDate) ? (
-        
-        <Alert
-          variant="danger"
-          style={{
-            width: "100%",
-            maxWidth: "600px",
-            margin: "20px auto",
-            border: "2px solid white",
-            height: "130px",
-          }}
-        >
-          You can apply for leave only once in one day.
-        </Alert>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <Form.Group controlId="name">
-            <Form.Label style={{ fontWeight: "bold" }}>Name:</Form.Label>
-            <Form.Control
-              type="text"
-              value={users ? users.name : ""}
-              readOnly
-            />
-          </Form.Group>
-
-          <Form.Group controlId="leaveType">
-            <Form.Label style={{ fontWeight: "bold" }}>Leave Type:</Form.Label>
-            <br/>
-            <Form.Select
-            style={{ fontWeight: "/", width: "100%",height: "35px" }}
-              value={leaveType}
-              onChange={(e) => setLeaveType(e.target.value)}
-              required
-            >
-              <option value="">Please select leave type</option>
-              <option value="Vacation Leave">Vacation Leave</option>
-              <option value="Sick Leave/Casual leave">Sick Leave/Casual leave</option>
-              <option value="Maternity/Paternity Leave">Maternity/Paternity Leave</option>
-              <option value="Study Leave">Study Leave</option>
-            </Form.Select>
-          </Form.Group>
-
-          <Form.Group controlId="leaveDuration">
-            <Form.Label style={{ fontWeight: "bold" }}>Leave Duration:</Form.Label>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Form.Check
-                type="checkbox"
-                label="Full Day"
-                name="leaveDuration"
-                value="full"
-                checked={leaveDuration.includes("full")}
-                onChange={() => setLeaveDuration(prev =>
-                  prev.includes("full") ? prev.filter(d => d !== "full") : [...prev, "full"]
-                )}
-                style={{ marginRight: "10px" }}
-              />
-              <Form.Check
-                type="checkbox"
-                label="First Half"
-                name="leaveDuration"
-                value="firstHalf"
-                checked={leaveDuration.includes("firstHalf")}
-                onChange={() => setLeaveDuration(prev => 
-                  prev.includes("firstHalf") ? prev.filter(d => d !== "firstHalf") : [...prev, "firstHalf"]
-                )}
-                style={{ marginRight: "10px" }}
-              />
-              <Form.Check
-                type="checkbox"
-                label="Second Half"
-                name="leaveDuration"
-                value="secondHalf"
-                checked={leaveDuration.includes("secondHalf")}
-                onChange={() => setLeaveDuration(prev => 
-                  prev.includes("secondHalf") ? prev.filter(d => d !== "secondHalf") : [...prev, "secondHalf"]
-                )}
-              />
-            </div>
-          </Form.Group>
-
-          <Form.Group controlId="empCode">
-            <Form.Label style={{ fontWeight: "bold" }}>Emp Code:</Form.Label>
-            <Form.Control type="text" value={empCode} readOnly />
-          </Form.Group>
-
-          <Form.Group controlId="email">
-            <Form.Label style={{ fontWeight: "bold" }}>Email:</Form.Label>
-            <Form.Control
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="depart">
-            <Form.Label style={{ fontWeight: "bold" }}>Department:</Form.Label>
-            <Form.Control type="text" value={depart} readOnly />
-          </Form.Group>
-
-          <Form.Group controlId="startDate">
-            <Form.Label style={{ fontWeight: "bold" }}>Start Date:</Form.Label>
-            <Form.Control
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-              min={todayDate}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="endDate">
-            <Form.Label style={{ fontWeight: "bold" }}>End Date:</Form.Label>
-            <Form.Control
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-              min={startDate ? startDate : todayDate}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="reason">
-            <Form.Label style={{ fontWeight: "bold" }}>Reason:</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Button variant="primary" type="submit" disabled={loadingSubmit}>
-            {loadingSubmit ? <Spinner as="span" animation="border" size="sm" /> : "Submit"}
-          </Button>
-        </form>
-      )}
-      {showAlert && <Alert variant="success">Leave application submitted successfully!</Alert>}
-      {showErrorAlert && <Alert variant="danger">Error submitting leave application. Please try again.</Alert>}
     </div>
-  </div>
   );
 }
 

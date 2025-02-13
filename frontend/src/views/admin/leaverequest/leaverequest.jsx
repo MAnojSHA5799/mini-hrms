@@ -57,7 +57,7 @@ function LeaveRequest() {
 
   const fetchUserProfiles = async () => {
     try {
-      const response = await axios.get('https://mini-hrms.onrender.com/leaveapplications');
+      const response = await axios.get('http://localhost:4000/leaveapplications');
       const sortedData = response.data.sort((a, b) => {
         // Convert startdate strings to Date objects for comparison
         const dateA = new Date(b.applied_leave_dates);
@@ -77,7 +77,7 @@ function LeaveRequest() {
   // const handleApprove = async (userId, date, email,daysofleave) => {
   //   try {
   //     const formattedDate = formatDateToYYYYMMDD(date);
-  //     await axios.put(`https://mini-hrms.onrender.com/leaveapplications/approve/${userId}`, { date: formattedDate, email: email,daysofleave:daysofleave });
+  //     await axios.put(`http://localhost:4000/leaveapplications/approve/${userId}`, { date: formattedDate, email: email,daysofleave:daysofleave });
   //     fetchUserProfiles();
   //     alert(`Leave application for user with Employee Code ${userId} has been approved.`);
   //   } catch (error) {
@@ -88,7 +88,7 @@ function LeaveRequest() {
   // const handleReject = async (userId, date, email,daysofleave) => {
   //   try {
   //     const formattedDate = formatDateToYYYYMMDD(date);
-  //     await axios.put(`https://mini-hrms.onrender.com/leaveapplications/reject/${userId}`, { date: formattedDate, email: email,daysofleave: daysofleave });
+  //     await axios.put(`http://localhost:4000/leaveapplications/reject/${userId}`, { date: formattedDate, email: email,daysofleave: daysofleave });
   //     fetchUserProfiles();
   //   } catch (error) {
   //     console.error(`Error rejecting leave application with ID ${userId}:`, error);
@@ -101,7 +101,7 @@ function LeaveRequest() {
   
     try {
       const formattedDate = formatDateToYYYYMMDD(date);
-      await axios.put(`https://mini-hrms.onrender.com/leaveapplications/approve/${userId}`, {
+      await axios.put(`http://localhost:4000/leaveapplications/approve/${userId}`, {
         date: formattedDate,
         email: email,
         daysofleave: daysofleave,
@@ -119,7 +119,7 @@ function LeaveRequest() {
   
     try {
       const formattedDate = formatDateToYYYYMMDD(date);
-      await axios.put(`https://mini-hrms.onrender.com/leaveapplications/reject/${userId}`, {
+      await axios.put(`http://localhost:4000/leaveapplications/reject/${userId}`, {
         date: formattedDate,
         email: email,
         daysofleave: daysofleave,
@@ -174,7 +174,7 @@ function LeaveRequest() {
               <thead>
                 <tr>
                   {/* <th>Emp Code</th> */}
-                  <th>Profile</th>
+                  {/* <th>Profile</th> */}
                   <th>Name</th>
                   {/* <th>Email</th> */}
                   <th>Applied Date</th>
@@ -191,14 +191,12 @@ function LeaveRequest() {
                 {userProfiles.map(profile => (
                   <tr key={profile.id}>
                     {/* <td>{profile.emp_code}</td> */}
-                    <td data-label="Profile" className="text-center">
+                    {/* <td data-label="Profile" className="text-center">
                       <div className="profile-avatar-1">
-                        {profile && profile.data && (() => {
-                          const base64String = arrayBufferToBase64(profile.data.data);
-                          return <img className='pro-1' src={`data:image/png;base64,${base64String}`} />;
-                        })()}
+                      <img className="pro" src={profile.profile_picture} alt="Profile" />
+
                       </div>
-                    </td>
+                    </td> */}
                     <td data-label="Name">{profile.name}</td>
                     {/* <td>{profile.email}</td> */}
                     <td data-label="Applied Date">{formatDate(profile.applied_leave_dates)}</td>

@@ -32,11 +32,9 @@ useEffect(() => {
         style={{ backgroundImage: `url(${banner})` }}
       >
         <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700">
-        <img
-            className="h-[80px] w-[80px] rounded-full"
-            src={base64String ? `data:image/png;base64,${base64String}` : avatar}
-            // alt={storedUser ? storedUser.name : "User Avatar"}
-          />
+        
+                      {/* <img className="h-[80px] w-[80px] rounded-full" src={storedUser.profile_picture} alt="Profile" /> */}
+                      <img className="h-[80px] w-[80px] rounded-full" src={storedUser ? storedUser.profile_picture : avatar} alt="Profile" /> 
         </div>
       </div>
 

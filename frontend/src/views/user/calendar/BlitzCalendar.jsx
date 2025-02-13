@@ -1,55 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { Form, Button, Spinner, Alert } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import festivaldata from "../festivalData";
-import calendar from "../../../../src/assets/img/calendar/image.png"
-import { Container, Image } from 'react-bootstrap';
+import Widget from "components/widget/Widget";
+import { MdBarChart, MdDashboard } from "react-icons/md";
+import { IoDocuments } from "react-icons/io5";
 
+const BlitzCalendar = () => {
+  const [salary, setSalary] = useState(20000);
+  const [workDays, setWorkDays] = useState(27);
+  const [leaveData, setLeaveData] = useState(null);
+  const [calculatedSalary, setCalculatedSalary] = useState(0);
+  const [user, setUser] = useState(null);
+  const [empCode, setEmpCode] = useState("");
 
-const BlitzCalendar = ({ festivalData: propFestivalData }) => {
-  const [festivalData, setFestivalData] = useState(festivaldata);
-  const [leaveType, setLeaveType] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [reason, setReason] = useState("");
-  const [email, setEmail] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [leaveData, setLeaveData] = useState([]);
-  const [applyDate, setApplyDate] = useState([]);
-  const [users, setUser] = useState(null);
-  const [empCode, setEmpCode] = useState();
-  const [loading, setLoading] = useState(true);
-  const [depart, setDepart] = useState([]);
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [leaveDuration, setLeaveDuration] = useState("full");
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       setEmpCode(parsedUser.emp_code);
-      setEmail(parsedUser.email);
-      setDepart(parsedUser.department);
-    }
-
-    const employeeCode = JSON.parse(storedUser).emp_code;
-    if (employeeCode) {
-    //   fetchLeaveData(employeeCode);
+      fetchLeaveData(parsedUser.emp_code);
     }
   }, []);
 
-  
+  const fetchLeaveData = async (employeeCode) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/payroll?emp_code=${employeeCode}`);
+      console.log(response.data);
+      setLeaveData(response.data);
+
+      // Calculate salary
+      const totalLeaves = response.data?.total_days_of_leave || 0;
+      const presentDays = workDays - totalLeaves;
+      const calculatedSalary = (salary / workDays) * presentDays;
+      setCalculatedSalary(calculatedSalary.toFixed(2)); // Round to 2 decimal places
+    } catch (error) {
+      console.error("Error fetching leave data:", error);
+    }
+  };
+
   return (
     <div>
-     
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-1 lg:grid-cols-1 2xl:grid-cols-1 3xl:grid-cols-1">  
-      <Image style={{ height: '100%', width: '100%' }} className="logo" src={calendar} alt="Logo" />
+      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-3">
+        <Widget icon={<MdBarChart className="h-7 w-5" color="#ff5722" />} title={"Basic Salary"} subtitle={salary} />
+        <Widget icon={<IoDocuments className="h-6 w-5" color="#ff5722" />} title={"Working Days"} subtitle={workDays} />
+        <Widget icon={<MdDashboard className="h-6 w-5" color="#ff5722" />} title={"Total Leave"} subtitle={leaveData?.total_days_of_leave ?? "Loading..."} />
+        <Widget icon={<MdDashboard className="h-6 w-6" color="#ff5722" />} title={"Salary"} subtitle={calculatedSalary} />
       </div>
-  </div>
+    </div>
   );
 };
 

@@ -32,7 +32,7 @@ function UserTimein() {
   const fetchUserProfiles = async (employeeCode) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`https://mini-hrms.onrender.com/usertimeinDetails/${employeeCode}`);
+      const response = await axios.get(`http://localhost:4000/usertimeinDetails/${employeeCode}`);
       // const sortedData = response.data.sort((a, b) => {
       //   const dateComparison = new Date(b.user_current_date) - new Date(a.user_current_date);
       //   return dateComparison !== 0 ? dateComparison : a.name.localeCompare(b.name);
@@ -48,7 +48,7 @@ function UserTimein() {
   const fetchLeaveData = async (employeeCode) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://mini-hrms.onrender.com/leavedetails/${employeeCode}`);
+      const response = await axios.get(`http://localhost:4000/leavedetails/${employeeCode}`);
       setLeaveData(response.data || []);
     } catch (error) {
       console.error("Error fetching leave data:", error);
@@ -79,20 +79,28 @@ function UserTimein() {
     }),
     columnHelper.accessor("time_in", {
       header: "Time In",
-      cell: info => (
-        <span style={{ background: compareTime(info.row.original.time_in, "10:15:00") ? "#9A1B15" : "#52c41a", color: "white", padding: "3px", borderRadius: "3px" }}>
-          {info.row.original.time_in}
-        </span>
-      ),
+      cell: info => {
+        const timeIn = info.row.original.time_in ? info.row.original.time_in.slice(11, 19) : "N/A";
+        return (
+          <span style={{ background: compareTime(timeIn, "10:15:00") ? "#9A1B15" : "#52c41a", color: "white", padding: "3px", borderRadius: "3px" }}>
+            {timeIn}
+          </span>
+        );
+      },
     }),
+    
     columnHelper.accessor("time_out", {
       header: "Time Out",
-      cell: info => (
-        <span style={{ background: compareTime(info.row.original.time_out, "18:27:00") ? "#52c41a" : "#9A1B15", color: "white", padding: "3px", borderRadius: "3px" }}>
-          {info.row.original.time_out}
-        </span>
-      ),
+      cell: info => {
+        const timeOut = info.row.original.time_out ? info.row.original.time_out.slice(11, 19) : "N/A";
+        return (
+          <span style={{ background: timeOut !== "N/A" && compareTime(timeOut, "18:27:00") ? "#52c41a" : "#9A1B15", color: "white", padding: "3px", borderRadius: "3px" }}>
+            {timeOut}
+          </span>
+        );
+      },
     }),
+    
     // columnHelper.accessor("tea_break", {
     //   header: "Tea Break",
     //   cell: info => {

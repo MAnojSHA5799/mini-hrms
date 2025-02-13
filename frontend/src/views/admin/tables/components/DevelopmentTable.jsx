@@ -46,7 +46,7 @@ function CheckTable() {
   const fetchUserProfiles = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('https://mini-hrms.onrender.com/userProfiles');
+      const response = await axios.get('http://localhost:4000/userProfiles');
       // const sortedProfiles = response.user.sort((a, b) => a.emp_code - b.emp_code);
       console.log("sasa",response.data)
       setUserProfiles(response.data.data);
@@ -58,7 +58,7 @@ function CheckTable() {
 
   const fetchAdminName = async () => {
     try {
-      const response = await axios.get('https://mini-hrms.onrender.com/admin/profile');
+      const response = await axios.get('http://localhost:4000/admin/profile');
       setAdminName(response.data.name);
     } catch (error) {
       console.error('Error fetching admin name:', error);
@@ -88,7 +88,7 @@ function CheckTable() {
     try {
       const userId = editedUser.emp_code;
       const { data, ...filteredUser } = editedUser;
-      await axios.put(`https://mini-hrms.onrender.com/userProfiles/${userId}`, filteredUser);
+      await axios.put(`http://localhost:4000/userProfiles/${userId}`, filteredUser);
       fetchUserProfiles();
       setEditedUser(null);
       setIsEditing(false);
@@ -118,7 +118,7 @@ function CheckTable() {
       const numericPart = emp_code;
       const userId = numericPart;
       console.log(userId)
-      await axios.delete(`https://mini-hrms.onrender.com/userProfiles/${userId}`);
+      await axios.delete(`http://localhost:4000/userProfiles/${userId}`);
       fetchUserProfiles();
       setShowDeleteModal(false); // Close the delete confirmation modal
     } catch (error) {
@@ -175,11 +175,8 @@ function CheckTable() {
                     <td  data-label="Emp Code">{profile.emp_code}</td>
                     <td data-label="Profile" className="text-center">
                       <div className="profile-avatar">
-                        {profile && profile.data && (() => {
-                          const base64String = arrayBufferToBase64(profile.profile_picture
-                          );
-                          return <img className='pro' key={index} src={`data:image/png;base64,${base64String}`} alt={`Image ${index}`} />;
-                        })()}
+                      <img className="pro" src={profile.profile_picture} alt="Profile" />
+
                       </div>
                     </td>
                     <td data-label="Name">{profile.name}</td>

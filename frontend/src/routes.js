@@ -69,13 +69,13 @@ const routes = [
   component: <EditProfile />,
 },
 
-// {
-//   name: "Blitz Calendar",
-//   layout: "/admin",
-//   path: "calendar",  // Add :id to define a parameter in the path
-//   icon: <MdLock className="h-6 w-6" />,
-//   component: <Calendar />,
-// },
+{
+  name: "All Employee Payroll",
+  layout: "/admin",
+  path: "payroll",  // Add :id to define a parameter in the path
+  icon: <MdLock className="h-6 w-6" />,
+  component: <Calendar />,
+},
 
 
   {
@@ -187,13 +187,13 @@ const routes = [
     icon: <MdLock className="h-6 w-6" />,
     component: <EditLeave />,
   },
-  // {
-  //   name: "Blitz Calendar",
-  //   layout: "/user",
-  //   path: "calendar",  // Add :id to define a parameter in the path
-  //   icon: <MdLock className="h-6 w-6" />,
-  //   component: <BlitzCalendar />,
-  // },
+  {
+    name: "Employee Payroll",
+    layout: "/user",
+    path: "payroll",  // Add :id to define a parameter in the path
+    icon: <MdLock className="h-6 w-6" />,
+    component: <BlitzCalendar />,
+  },
 
 ];
 export default routes;

@@ -29,7 +29,9 @@ const Dashboard = () => {
   const [vacationLeaveData, setVacationLeaveData] = useState([]);
   const [sickLeaveData, setSickLeaveData] = useState([]);
   const [materinityLeaveData, setMaterinityLeaveData] = useState([]);
-  const todayDate = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
+  const todayDate = new Date();
+const localDate = todayDate.toLocaleDateString("en-CA"); // "en-CA" gives the date in YYYY-MM-DD format
+console.log(localDate);
   const [trackingData, setTrackingData] = useState([]);
   const [totalleave, setTotalLeave] = useState([]);
   const [takingLeave, setTakingLeave] = useState([]);
@@ -46,10 +48,10 @@ const Dashboard = () => {
     // }
   
     // Fetch data
-    fetchVacationLeaveData();
-    fetchSickLeaveData();
-    fetchMaterinityLeaveData();
-    fetchTrackingLeaves();
+    // fetchVacationLeaveData();
+    // fetchSickLeaveData();
+    // fetchMaterinityLeaveData();
+    // fetchTrackingLeaves();
     fetchTimeCount();
     fetchTimesheetAndLeaveData();
   
@@ -64,7 +66,7 @@ const Dashboard = () => {
       const storedUser = localStorage.getItem("user");
       const employeeCode = JSON.parse(storedUser).emp_code;
       const response = await axios.get(
-        `https://mini-hrms.onrender.com/userTimeCount?employeeCode=${employeeCode}`
+        `http://localhost:4000/userTimeCount?employeeCode=${employeeCode}`
       );
       setTimeCount(response.data);
     } catch (error) {
@@ -80,9 +82,9 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
 
-      const url = `https://mini-hrms.onrender.com/timesheet22?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`;
+      const url = `http://localhost:4000/timesheet22?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`;
       const response = await axios.get(url);
-      console.log("asadaddf",response.data.timeSheet)
+      console.log("asadaddf",response.data.timeSheet,response.data.leaves)
       setTimesheetData(response.data.timeSheet);
       setLeaveData(response.data.leaves);
       setLoading(false);
@@ -97,7 +99,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
-        `https://mini-hrms.onrender.com/vacation-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
+        `http://localhost:4000/vacation-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
       setVacationLeaveData(response.data);
     } catch (error) {
@@ -111,7 +113,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
-        `https://mini-hrms.onrender.com/sick-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
+        `http://localhost:4000/sick-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
       setSickLeaveData(response.data);
     } catch (error) {
@@ -125,7 +127,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
-        `https://mini-hrms.onrender.com/materinity-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
+        `http://localhost:4000/materinity-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
       setMaterinityLeaveData(response.data);
     } catch (error) {
@@ -142,7 +144,7 @@ const Dashboard = () => {
   
       const employeeCode = JSON.parse(storedUser).emp_code;
       const response = await axios.get(
-        `https://mini-hrms.onrender.com/api/tracking-leaves?employeeCode=${employeeCode}`
+        `http://localhost:4000/api/tracking-leaves?employeeCode=${employeeCode}`
       );
   
       const leaveData = response.data[0];
@@ -162,43 +164,50 @@ const Dashboard = () => {
   const handleTimeInClick = async () => {
     const now = new Date();
     const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const morningLimit = 9 * 3600 + 30 * 60; // 10:15:00 in seconds
+    const morningLimit = 24 * 3600 + 30 * 60; // 10:15:00 in seconds
     const afternoonStart = 13 * 3600; // 13:00:00 in seconds
     const afternoonEnd = 14 * 3600 + 30 * 60; // 14:30:00 in seconds
-
+  
     // Check for leave conditions
-    const leave = leaveData[0];
-    if (leave) {
-      if (leave.leave_duration === "FirstHalf" && (currentTime < afternoonStart || currentTime > afternoonEnd)) {
-        alert("For FirstHalf leave, you can Time In only between 1:00 PM to 2:30 PM.");
-        return;
-      } else if (leave.leave_duration === "SecondHalf" && currentTime > morningLimit) {
-        alert("For SecondHalf leave, you cannot Time In after 10:15 AM.");
-        return;
+    if (Array.isArray(leaveData) && leaveData.length > 0) {
+      const leave = leaveData[0]; // Now safe to access the first item in leaveData
+      if (leave) {
+        if (leave.leave_duration === "FirstHalf" && (currentTime < afternoonStart || currentTime > afternoonEnd)) {
+          alert("For FirstHalf leave, you can Time In only between 1:00 PM to 2:30 PM.");
+          return;
+        } else if (leave.leave_duration === "SecondHalf" && currentTime > morningLimit) {
+          alert("For SecondHalf leave, you cannot Time In after 10:15 AM.");
+          return;
+        }
       }
     } else if (currentTime > morningLimit) {
-      alert("The current time is after 09:30:00. You cannot Time In.");
+      alert("The current time is after 24:30:00. You cannot Time In.");
       return;
     }
+  
     const confirmation = window.confirm("Are you sure you want to Time In?");
     if (confirmation) {
       try {
         const storedUser = localStorage.getItem("user");
-        const employeeCode = JSON.parse(storedUser).emp_code;
-        const employeeUsername = JSON.parse(storedUser).name;
-        const url = `https://mini-hrms.onrender.com/timein`;
-
-        const requestData = {
-          employeeCode: employeeCode,
-          employeeUsername: employeeUsername,
-        };
-        const response = await axios.post(url, requestData);
-        window.location.reload();
-      } catch (error) {        
+        if (storedUser) {
+          const { emp_code, name } = JSON.parse(storedUser);
+          const url = `http://localhost:4000/timein`;
+  
+          const requestData = {
+            employeeCode: emp_code,
+            employeeUsername: name,
+          };
+          const response = await axios.post(url, requestData);
+          window.location.reload();
+        } else {
+          console.error("No user data found in localStorage.");
+        }
+      } catch (error) {
         console.error("Error:", error);
       }
     }
   };
+  
  
   const handleTimeOutClick = async () => {
     const now = new Date();
@@ -218,7 +227,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/timeout`;
+        const url = `http://localhost:4000/timeout`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -249,7 +258,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/teabreakIn`;
+        const url = `http://localhost:4000/teabreakIn`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -280,7 +289,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/teabreakOut`;
+        const url = `http://localhost:4000/teabreakOut`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -311,7 +320,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/teabreakInTwo`;
+        const url = `http://localhost:4000/teabreakInTwo`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -342,7 +351,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/teabreakOutTwo`;
+        const url = `http://localhost:4000/teabreakOutTwo`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -373,7 +382,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/teabreakInThree`;
+        const url = `http://localhost:4000/teabreakInThree`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -404,7 +413,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/teabreakOutThree`;
+        const url = `http://localhost:4000/teabreakOutThree`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -435,7 +444,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/smokingbreak`;
+        const url = `http://localhost:4000/smokingbreak`;
 
         // Prepare data to send to the backend
         const requestData = {
@@ -467,7 +476,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `https://mini-hrms.onrender.com/smokingbreakIn`;
+        const url = `http://localhost:4000/smokingbreakIn`;
 
         // Prepare data to send to the backend
         const requestData = {
@@ -496,7 +505,7 @@ const Dashboard = () => {
   return (
     <div>
       {/* Card widget */}
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-3">  
+      {/* <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-3">  
       <Widget
           icon={<MdBarChart className="h-7 w-7" color='#ff5722' />}
           title={"Total Leave"}
@@ -512,7 +521,7 @@ const Dashboard = () => {
           title={"Balance Leave"}
           subtitle={trackingData}
         />
-      </div>
+      </div> */}
 
       
 
@@ -544,10 +553,10 @@ const Dashboard = () => {
           };
 
           const formattedUserCurrentDate = formatDate(item.user_current_date);
-
+{console.log(formattedUserCurrentDate,localDate,"554")}
           return (
             <React.Fragment key={index}>
-              {formattedUserCurrentDate === todayDate ? (
+              {formattedUserCurrentDate === localDate ? (
                 <Button
                   className="btn2"
                   onClick={handleTimeInClick}
@@ -588,7 +597,7 @@ const Dashboard = () => {
 
           return (
             <React.Fragment key={index}>
-              {formattedUserCurrentDate === todayDate && item.time_out != null ? (
+              {formattedUserCurrentDate === localDate && item.time_out != null ? (
                 <Button
                   className="btn2"
                   onClick={handleTimeOutClick}
@@ -622,14 +631,15 @@ const Dashboard = () => {
     timesheetData.map((index) => (
       <div key={index}>
         <strong style={{ fontWeight: "600", color: "#230B54" }}>
-          Time in:
+          Time in :
         </strong>{" "}
-        {index.time_in}
+        {index.time_in ? index.time_in.slice(11, 19)  : "Not Time in"}
         <br />
         <strong style={{ fontWeight: "600", color: "#230B54" }}>
-          Time out:
+          Time out :
         </strong>{" "}
-        {index.time_out}
+        {index.time_out ? index.time_out.slice(11, 19)  : "Not Time out"}
+
       </div>
     ))
   )

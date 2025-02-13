@@ -8,6 +8,8 @@ const LeaveForm = () => {
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
   const [formData, setFormData] = useState({
     emp_code: "",
     name: "",
@@ -22,7 +24,7 @@ const LeaveForm = () => {
     dateofjoining: "",
     designation: "",
     department: "",
-    password: "", // Add password to form data
+    password: "",
   });
 
   useEffect(() => {
@@ -45,26 +47,61 @@ const LeaveForm = () => {
     setFile(e.target.files[0]);
   };
 
+  const uploadImage = async () => {
+    if (!file) return null;  // Return null if no file is selected
+    setLoading(true);
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "Images");
+    data.append("cloud_name", "diltqwt04");
+    data.append("folder", "Cloudinary-React");
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/diltqwt04/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const res = await response.json();
+      setImageUrl(res.url);  // Set the image URL
+      setLoading(false);
+      return res.url;  // Return the URL to be used in form data
+    } catch (error) {
+      setLoading(false);
+      alert("Error uploading image");
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    try {
-      const formDataToSend = new FormData();
-      
-      if (file) formDataToSend.append("profile_picture", file);
-      
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
-      });
-  
-      // Log formData values
-      console.log("Form Data Values:");
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(`${key}:`, value);
+
+    // If file is selected but no image URL is set, upload the image first
+    if (file && !imageUrl) {
+      const uploadedImageUrl = await uploadImage();
+      if (!uploadedImageUrl) {
+        return;  // If the image upload fails, return without submitting the form
       }
-  
-      await axios.post("https://mini-hrms.onrender.com/add-user", formDataToSend);
-  
+    }
+
+    try {
+      const checkResponse = await axios.post("http://localhost:4000/check-user", {
+        emp_code: formData.emp_code,
+        name: formData.name,
+      });
+
+      if (checkResponse.data.exists) {
+        alert("Employee Code or Name already exists!");
+        return;
+      }
+
+      // Add the profile_picture URL to formData
+      const formDataToSend = { ...formData, profile_picture: imageUrl };
+
+      await axios.post("http://localhost:4000/add-user", formDataToSend);
+      // Clear form after submission
       setFormData({
         emp_code: "",
         name: "",
@@ -79,11 +116,12 @@ const LeaveForm = () => {
         dateofjoining: "",
         designation: "",
         department: "",
-        password: "", // Reset the password field
+        password: "",
       });
       setFile(null);
       setSubmitted(true);
-      alert("User details saved successfully!");
+      alert("Employee details saved successfully!");
+      navigate("/admin/data-tables");
     } catch (error) {
       console.error("Error saving user details:", error);
     }
@@ -113,33 +151,35 @@ const LeaveForm = () => {
             ].map((field) => (
               <FormGroup key={field.name} controlId={field.name}>
                 <Form.Label>{field.label}:</Form.Label>
-                <FormControl type={field.type} placeholder={field.label} value={formData[field.name]} onChange={handleChange} required name={field.name} />
+                <FormControl
+                  type={field.type}
+                  placeholder={field.label}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  required
+                  name={field.name}
+                />
               </FormGroup>
             ))}
 
-            {/* Password Field */}
             <FormGroup controlId="password">
               <Form.Label>Password:</Form.Label>
-              <FormControl 
-                type="password" 
-                placeholder="Enter password" 
-                value={formData.password} 
-                onChange={handleChange} 
-                required 
-                name="password" 
+              <FormControl
+                type="password"
+                placeholder="Enter password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                name="password"
               />
             </FormGroup>
 
             <FormGroup controlId="department">
               <Form.Label>Department:</Form.Label>
               <FormControl as="select" value={formData.department} onChange={handleChange} required name="department">
-                <option value="" disabled>
-                  Select Department
-                </option>
+                <option value="" disabled>Select Department</option>
                 {["Sales", "Production", "Support", "Accounts", "IT", "Operation"].map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
+                  <option key={dept} value={dept}>{dept}</option>
                 ))}
               </FormControl>
             </FormGroup>
@@ -149,8 +189,12 @@ const LeaveForm = () => {
               <FormControl type="file" accept="image/*" onChange={handlePictureChange} name="profile_picture" />
             </FormGroup>
 
-            <Button style={{ display: "block", margin: "20px auto", backgroundColor: "#E55A1B", color: "white", border: "none", width: "200px" }} type="submit">
-              Submit
+            <Button
+              disabled={loading}
+              style={{ display: "block", margin: "20px auto", backgroundColor: "#E55A1B", color: "white", border: "none", width: "200px" }}
+              type="submit"
+            >
+              {loading ? "Uploading..." : "Submit"}
             </Button>
           </div>
         </Form>
