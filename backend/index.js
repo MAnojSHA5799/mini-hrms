@@ -421,7 +421,7 @@ app.post('/timein', async (req, res) => {
 //     const currentDateLocal = new Date().toLocaleDateString("en-CA");  // Local date in YYYY-MM-DD format
 // console.log(currentDateLocal);
    const currentDate = new Date().toISOString().slice(0, 10);
-
+   console.log(currentDate,"424")
 
     // Create a new user time sheet document
     const newTimeSheet = new UserTimeSheet({
