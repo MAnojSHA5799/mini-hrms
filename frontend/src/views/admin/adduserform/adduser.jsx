@@ -63,7 +63,7 @@ const LeaveForm = () => {
         console.log(`${key}:`, value);
       }
   
-      await axios.post("http://localhost:4000/add-user", formDataToSend);
+      await axios.post("https://mini-hrms.onrender.com/add-user", formDataToSend);
   
       setFormData({
         emp_code: "",

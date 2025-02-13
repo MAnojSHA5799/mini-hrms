@@ -51,7 +51,7 @@ function TimeInDetails() {
   const fetchUserProfiles = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:4000/timeinDetails");
+      const response = await axios.get("https://mini-hrms.onrender.com/timeinDetails");
       const sortedData = response.data.sort((a, b) => {
         // First, compare by date in descending order
         const dateComparison =
@@ -84,7 +84,7 @@ function TimeInDetails() {
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/employees");
+      const response = await axios.get("https://mini-hrms.onrender.com/employees");
       // Sort employees alphabetically by name
       const sortedEmployees = response.data.sort((a, b) =>
         a.name.localeCompare(b.name)

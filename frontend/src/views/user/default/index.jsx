@@ -64,7 +64,7 @@ const Dashboard = () => {
       const storedUser = localStorage.getItem("user");
       const employeeCode = JSON.parse(storedUser).emp_code;
       const response = await axios.get(
-        `http://localhost:4000/userTimeCount?employeeCode=${employeeCode}`
+        `https://mini-hrms.onrender.com/userTimeCount?employeeCode=${employeeCode}`
       );
       setTimeCount(response.data);
     } catch (error) {
@@ -80,7 +80,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
 
-      const url = `http://localhost:4000/timesheet22?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`;
+      const url = `https://mini-hrms.onrender.com/timesheet22?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`;
       const response = await axios.get(url);
       console.log("asadaddf",response.data.timeSheet)
       setTimesheetData(response.data.timeSheet);
@@ -97,7 +97,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
-        `http://localhost:4000/vacation-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
+        `https://mini-hrms.onrender.com/vacation-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
       setVacationLeaveData(response.data);
     } catch (error) {
@@ -111,7 +111,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
-        `http://localhost:4000/sick-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
+        `https://mini-hrms.onrender.com/sick-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
       setSickLeaveData(response.data);
     } catch (error) {
@@ -125,7 +125,7 @@ const Dashboard = () => {
       const employeeCode = JSON.parse(storedUser).emp_code;
       const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
-        `http://localhost:4000/materinity-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
+        `https://mini-hrms.onrender.com/materinity-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
       setMaterinityLeaveData(response.data);
     } catch (error) {
@@ -142,7 +142,7 @@ const Dashboard = () => {
   
       const employeeCode = JSON.parse(storedUser).emp_code;
       const response = await axios.get(
-        `http://localhost:4000/api/tracking-leaves?employeeCode=${employeeCode}`
+        `https://mini-hrms.onrender.com/api/tracking-leaves?employeeCode=${employeeCode}`
       );
   
       const leaveData = response.data[0];
@@ -186,7 +186,7 @@ const Dashboard = () => {
         const storedUser = localStorage.getItem("user");
         const employeeCode = JSON.parse(storedUser).emp_code;
         const employeeUsername = JSON.parse(storedUser).name;
-        const url = `http://localhost:4000/timein`;
+        const url = `https://mini-hrms.onrender.com/timein`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -218,7 +218,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/timeout`;
+        const url = `https://mini-hrms.onrender.com/timeout`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -249,7 +249,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/teabreakIn`;
+        const url = `https://mini-hrms.onrender.com/teabreakIn`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -280,7 +280,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/teabreakOut`;
+        const url = `https://mini-hrms.onrender.com/teabreakOut`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -311,7 +311,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/teabreakInTwo`;
+        const url = `https://mini-hrms.onrender.com/teabreakInTwo`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -342,7 +342,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/teabreakOutTwo`;
+        const url = `https://mini-hrms.onrender.com/teabreakOutTwo`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -373,7 +373,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/teabreakInThree`;
+        const url = `https://mini-hrms.onrender.com/teabreakInThree`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -404,7 +404,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/teabreakOutThree`;
+        const url = `https://mini-hrms.onrender.com/teabreakOutThree`;
 
         const requestData = {
           employeeCode: employeeCode,
@@ -435,7 +435,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/smokingbreak`;
+        const url = `https://mini-hrms.onrender.com/smokingbreak`;
 
         // Prepare data to send to the backend
         const requestData = {
@@ -467,7 +467,7 @@ const Dashboard = () => {
 
         const employeeUsername = JSON.parse(storedUser).name;
 
-        const url = `http://localhost:4000/smokingbreakIn`;
+        const url = `https://mini-hrms.onrender.com/smokingbreakIn`;
 
         // Prepare data to send to the backend
         const requestData = {

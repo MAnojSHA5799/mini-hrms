@@ -32,7 +32,7 @@ function UserTimein() {
   const fetchUserProfiles = async (employeeCode) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:4000/usertimeinDetails/${employeeCode}`);
+      const response = await axios.get(`https://mini-hrms.onrender.com/usertimeinDetails/${employeeCode}`);
       // const sortedData = response.data.sort((a, b) => {
       //   const dateComparison = new Date(b.user_current_date) - new Date(a.user_current_date);
       //   return dateComparison !== 0 ? dateComparison : a.name.localeCompare(b.name);
@@ -48,7 +48,7 @@ function UserTimein() {
   const fetchLeaveData = async (employeeCode) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:4000/leavedetails/${employeeCode}`);
+      const response = await axios.get(`https://mini-hrms.onrender.com/leavedetails/${employeeCode}`);
       setLeaveData(response.data || []);
     } catch (error) {
       console.error("Error fetching leave data:", error);

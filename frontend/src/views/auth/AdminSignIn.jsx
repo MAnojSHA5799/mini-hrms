@@ -34,7 +34,7 @@ export default function AdminSignIn() {
     console.log("29",formData); // Log form data to the console
   
     try {
-      const response = await axios.post('http://localhost:4000/adminlogin', formData);
+      const response = await axios.post('https://mini-hrms.onrender.com/adminlogin', formData);
       if (response.data.success) {
         console.log(response.data)
         handleSuccessfulLogin(response.data.admin);
@@ -54,7 +54,7 @@ export default function AdminSignIn() {
     setError('');
     setLoadingForgetPassword(true);
     try {
-      const response = await axios.post('http://localhost:4000/forgetpassword', { email, password });
+      const response = await axios.post('https://mini-hrms.onrender.com/forgetpassword', { email, password });
       if (response.data.success) {
         alert("Admin password changed successfully");
         setShowModal(false);
