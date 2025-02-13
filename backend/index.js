@@ -418,10 +418,11 @@ app.post('/timein', async (req, res) => {
     const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
     const istTime = new Date(utcTime.getTime() + istOffset);
     const istTimeString = istTime.toISOString().slice(0, 19).replace('T', ' ');  // Format to 'YYYY-MM-DD HH:mm:ss'
-//     const currentDateLocal = new Date().toLocaleDateString("en-CA");  // Local date in YYYY-MM-DD format
-// console.log(currentDateLocal);
-   const currentDate = new Date().toISOString().slice(0, 10);
-   console.log(currentDate,"424")
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() ); // Add 1 day
+    const formattedDate = currentDate.toISOString().slice(0, 10); // Format to YYYY-MM-DD
+    
+    console.log(formattedDate, "424");
 
     // Create a new user time sheet document
     const newTimeSheet = new UserTimeSheet({
@@ -429,7 +430,7 @@ app.post('/timein', async (req, res) => {
       emp_code: employeeCode,
       time_in: istTime,
       time_out: null,
-      user_current_date: currentDate,
+      user_current_date: formattedDate,
       latitude: latitude,
       longitude: longitude,
     });
@@ -479,7 +480,12 @@ app.post('/timeout', async (req, res) => {
     const istOffset = 5.5 * 60 * 60 * 1000;
     const istTime = new Date(utcTime.getTime() + istOffset);
     const istTimeString = istTime.toISOString().slice(0, 19).replace('T', ' '); // Format: "YYYY-MM-DD HH:MM:SS"
-    const currentDate = new Date().toISOString().slice(0, 10); // Format: "YYYY-MM-DD"
+    // const currentDate = new Date().toISOString().slice(0, 10); // Format: "YYYY-MM-DD"
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() ); // Add 1 day
+    const formattedDate = currentDate.toISOString().slice(0, 10); // Format to YYYY-MM-DD
+    
+    console.log(formattedDate, "424");
 
     // Log the incoming data and calculated times
     console.log('Employee Code:', employeeCode);
@@ -492,7 +498,7 @@ app.post('/timeout', async (req, res) => {
       {
         emp_code: employeeCode,
         username: employeeUsername,
-        user_current_date: currentDate,
+        user_current_date: formattedDate,
       },
       { $set: { time_out: istTimeString } }
     );
@@ -770,6 +776,12 @@ app.put("/users/:id", verifyToken, async (req, res) => {
   }
 });
 
+
+const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() ); // Add 1 day
+const formattedDate = currentDate.toISOString().slice(0, 10); // Format to YYYY-MM-DD
+
+console.log(formattedDate, "424");
 // Auto API Hit Every 50 Seconds
 setInterval(async () => {
   try {
