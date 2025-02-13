@@ -78,7 +78,7 @@ const Dashboard = () => {
     try {
       const storedUser = localStorage.getItem("user");
       const employeeCode = JSON.parse(storedUser).emp_code;
-      const employeeUsername = JSON.parse(storedUser).ame;
+      const employeeUsername = JSON.parse(storedUser).name;
 
       const url = `http://localhost:4000/timesheet22?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`;
       const response = await axios.get(url);
@@ -94,7 +94,7 @@ const Dashboard = () => {
     try {
       const storedUser = localStorage.getItem("user");
       const employeeCode = JSON.parse(storedUser).emp_code;
-      const employeeUsername = JSON.parse(storedUser).username;
+      const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
         `http://localhost:4000/vacation-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
@@ -108,7 +108,7 @@ const Dashboard = () => {
     try {
       const storedUser = localStorage.getItem("user");
       const employeeCode = JSON.parse(storedUser).emp_code;
-      const employeeUsername = JSON.parse(storedUser).username;
+      const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
         `http://localhost:4000/sick-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
@@ -122,7 +122,7 @@ const Dashboard = () => {
     try {
       const storedUser = localStorage.getItem("user");
       const employeeCode = JSON.parse(storedUser).emp_code;
-      const employeeUsername = JSON.parse(storedUser).username;
+      const employeeUsername = JSON.parse(storedUser).name;
       const response = await axios.get(
         `http://localhost:4000/materinity-leave?employeeCode=${employeeCode}&employeeUsername=${employeeUsername}`
       );
@@ -203,7 +203,7 @@ const Dashboard = () => {
     const now = new Date();
     const currentTime =
       now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const targetTime = 18 * 3600 + 20 * 60; // 9:45:00 in seconds
+    const targetTime = 16 * 3600 + 20 * 60; // 9:45:00 in seconds
     if (currentTime <= targetTime) {
       alert("The current time is before 06:20:00. You cannot Time Out.");
       return;
@@ -215,7 +215,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/timeout`;
 
@@ -246,7 +246,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/teabreakIn`;
 
@@ -277,7 +277,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/teabreakOut`;
 
@@ -308,7 +308,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/teabreakInTwo`;
 
@@ -339,7 +339,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/teabreakOutTwo`;
 
@@ -370,7 +370,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/teabreakInThree`;
 
@@ -401,7 +401,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/teabreakOutThree`;
 
@@ -432,7 +432,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/smokingbreak`;
 
@@ -464,7 +464,7 @@ const Dashboard = () => {
 
         const employeeCode = JSON.parse(storedUser).emp_code;
 
-        const employeeUsername = JSON.parse(storedUser).username;
+        const employeeUsername = JSON.parse(storedUser).name;
 
         const url = `http://localhost:4000/smokingbreakIn`;
 

@@ -22,7 +22,7 @@ app.use(cors({
 }));
 
 // MongoDB Connection
-const mongoURI = process.env.MONGO_URI || "mongodb+srv://manojshakya54:VV2F0ZbarJSRpstc@cluster0.htdtk.mongodb.net/";
+const mongoURI =  "mongodb+srv://manojshakya54:VV2F0ZbarJSRpstc@cluster0.htdtk.mongodb.net/";
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -72,6 +72,7 @@ const userTimeSheetSchema = new mongoose.Schema({
   username: String,
   emp_code: String,
   time_in: Date,
+  time_out: Date,
   user_current_date: String,
   latitude: Number,
   longitude: Number,
@@ -387,6 +388,7 @@ app.post('/timein', async (req, res) => {
       username: employeeUsername,
       emp_code: employeeCode,
       time_in: istTime,
+      time_out: '',
       user_current_date: currentDate,
       latitude: latitude,
       longitude: longitude,
@@ -427,6 +429,49 @@ console.log("1229", response);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.post('/timeout', async (req, res) => {
+  try {
+    const { employeeCode, employeeUsername } = req.body;
+
+    // Get the current IST time
+    const utcTime = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istTime = new Date(utcTime.getTime() + istOffset);
+    const istTimeString = istTime.toISOString().slice(0, 19).replace('T', ' '); // Format: "YYYY-MM-DD HH:MM:SS"
+    const currentDate = new Date().toISOString().slice(0, 10); // Format: "YYYY-MM-DD"
+
+    // Log the incoming data and calculated times
+    console.log('Employee Code:', employeeCode);
+    console.log('Employee Username:', employeeUsername);
+    console.log('IST Time:', istTimeString);
+    console.log('Current Date:', currentDate);
+
+    // Find the time sheet entry and update the time_out field
+    const result = await UserTimeSheet.updateOne(
+      {
+        emp_code: employeeCode,
+        username: employeeUsername,
+        user_current_date: currentDate,
+      },
+      { $set: { time_out: istTimeString } }
+    );
+
+    // Log the result of the update operation
+    console.log('Update result:', result);
+
+    // Check if any document was updated
+    if (result.nModified > 0) {
+      res.status(200).json({ message: 'Time out recorded successfully.' });
+    } else {
+      res.status(404).json({ error: 'No matching time sheet entry found.' });
+    }
+  } catch (error) {
+    console.error('Error updating data into MongoDB: ' + error.message);
+    res.status(500).json({ error: 'Error recording time out.' });
+  }
+});
+
 
 
 // Update Usered (Protected)
