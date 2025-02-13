@@ -162,7 +162,7 @@ const Dashboard = () => {
   const handleTimeInClick = async () => {
     const now = new Date();
     const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const morningLimit = 20 * 3600 + 30 * 60; // 10:15:00 in seconds
+    const morningLimit = 9 * 3600 + 30 * 60; // 10:15:00 in seconds
     const afternoonStart = 13 * 3600; // 13:00:00 in seconds
     const afternoonEnd = 14 * 3600 + 30 * 60; // 14:30:00 in seconds
 
@@ -177,7 +177,7 @@ const Dashboard = () => {
         return;
       }
     } else if (currentTime > morningLimit) {
-      alert("The current time is after 20:30:00. You cannot Time In.");
+      alert("The current time is after 09:30:00. You cannot Time In.");
       return;
     }
     const confirmation = window.confirm("Are you sure you want to Time In?");
@@ -204,7 +204,7 @@ const Dashboard = () => {
     const now = new Date();
     const currentTime =
       now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const targetTime = 16 * 3600 + 20 * 60; // 9:45:00 in seconds
+    const targetTime = 18 * 3600 + 20 * 60; // 9:45:00 in seconds
     if (currentTime <= targetTime) {
       alert("The current time is before 06:20:00. You cannot Time Out.");
       return;
