@@ -37,7 +37,7 @@ function CheckTable() {
 
   const fetchLeaveData = async (employeeCode) => {
     try {
-      const url = `http://localhost:4000/leavedetails/${employeeCode}`;
+      const url = `https://mini-hrms.onrender.com/leavedetails/${employeeCode}`;
       const response = await axios.get(url);
       console.log(response.data)
       setLeaveData(response.data);
@@ -63,7 +63,7 @@ function CheckTable() {
   //   console.log("del",leave)
   //   if (window.confirm('Do you want to delete this leave application?')) {
   //     try {
-  //       await axios.delete(`http://localhost:4000/leavedetails/delete/${leave.id}`, { data: leave });
+  //       await axios.delete(`https://mini-hrms.onrender.com/leavedetails/delete/${leave.id}`, { data: leave });
   //       alert('Leave detail deleted successfully');
   //       fetchLeaveData(users.emp_code);
   //     } catch (error) {
@@ -87,7 +87,7 @@ function CheckTable() {
     }
   
     try {
-      const url = `http://localhost:4000/leavedetails/delete/${cleanedLeave.name}`;
+      const url = `https://mini-hrms.onrender.com/leavedetails/delete/${cleanedLeave.name}`;
       await axios.delete(url, { data: cleanedLeave });
       alert('Leave detail deleted successfully');
       fetchLeaveData(users.emp_code); // Refresh data after deletion

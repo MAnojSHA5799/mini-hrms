@@ -51,7 +51,7 @@ function TimeInDetails() {
   const fetchUserProfiles = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:4000/timeinDetails");
+      const response = await axios.get("https://mini-hrms.onrender.com/timeinDetails");
       const sortedData = response.data.sort((a, b) => {
         // First, compare by date in descending order
         const dateComparison =
@@ -89,7 +89,7 @@ function TimeInDetails() {
   
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/employees");
+      const response = await axios.get("https://mini-hrms.onrender.com/employees");
       // Sort employees alphabetically by name (ensure 'name' field exists)
       const sortedEmployees = response.data.sort((a, b) => {
         const nameA = a.name || '';  // Default to empty string if 'name' is undefined

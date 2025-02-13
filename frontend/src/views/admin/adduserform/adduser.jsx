@@ -87,7 +87,7 @@ const LeaveForm = () => {
     }
 
     try {
-      const checkResponse = await axios.post("http://localhost:4000/check-user", {
+      const checkResponse = await axios.post("https://mini-hrms.onrender.com/check-user", {
         emp_code: formData.emp_code,
         name: formData.name,
       });
@@ -100,7 +100,7 @@ const LeaveForm = () => {
       // Add the profile_picture URL to formData
       const formDataToSend = { ...formData, profile_picture: imageUrl };
 
-      await axios.post("http://localhost:4000/add-user", formDataToSend);
+      await axios.post("https://mini-hrms.onrender.com/add-user", formDataToSend);
       // Clear form after submission
       setFormData({
         emp_code: "",

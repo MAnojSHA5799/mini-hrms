@@ -65,7 +65,7 @@ function EditLeave() {
 
     try {
       // Perform the PUT request with updatedLeaveData
-      await axios.put(`http://localhost:4000/leavedetails/${currentLeave.id}`, updatedLeaveData);
+      await axios.put(`https://mini-hrms.onrender.com/leavedetails/${currentLeave.id}`, updatedLeaveData);
 
       // Close modal after successful update
       setShowModal(false);

@@ -57,7 +57,7 @@ function LeaveRequest() {
 
   const fetchUserProfiles = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/leaveapplications');
+      const response = await axios.get('https://mini-hrms.onrender.com/leaveapplications');
       const sortedData = response.data.sort((a, b) => {
         // Convert startdate strings to Date objects for comparison
         const dateA = new Date(b.applied_leave_dates);
@@ -77,7 +77,7 @@ function LeaveRequest() {
   // const handleApprove = async (userId, date, email,daysofleave) => {
   //   try {
   //     const formattedDate = formatDateToYYYYMMDD(date);
-  //     await axios.put(`http://localhost:4000/leaveapplications/approve/${userId}`, { date: formattedDate, email: email,daysofleave:daysofleave });
+  //     await axios.put(`https://mini-hrms.onrender.com/leaveapplications/approve/${userId}`, { date: formattedDate, email: email,daysofleave:daysofleave });
   //     fetchUserProfiles();
   //     alert(`Leave application for user with Employee Code ${userId} has been approved.`);
   //   } catch (error) {
@@ -88,7 +88,7 @@ function LeaveRequest() {
   // const handleReject = async (userId, date, email,daysofleave) => {
   //   try {
   //     const formattedDate = formatDateToYYYYMMDD(date);
-  //     await axios.put(`http://localhost:4000/leaveapplications/reject/${userId}`, { date: formattedDate, email: email,daysofleave: daysofleave });
+  //     await axios.put(`https://mini-hrms.onrender.com/leaveapplications/reject/${userId}`, { date: formattedDate, email: email,daysofleave: daysofleave });
   //     fetchUserProfiles();
   //   } catch (error) {
   //     console.error(`Error rejecting leave application with ID ${userId}:`, error);
@@ -101,7 +101,7 @@ function LeaveRequest() {
   
     try {
       const formattedDate = formatDateToYYYYMMDD(date);
-      await axios.put(`http://localhost:4000/leaveapplications/approve/${userId}`, {
+      await axios.put(`https://mini-hrms.onrender.com/leaveapplications/approve/${userId}`, {
         date: formattedDate,
         email: email,
         daysofleave: daysofleave,
@@ -119,7 +119,7 @@ function LeaveRequest() {
   
     try {
       const formattedDate = formatDateToYYYYMMDD(date);
-      await axios.put(`http://localhost:4000/leaveapplications/reject/${userId}`, {
+      await axios.put(`https://mini-hrms.onrender.com/leaveapplications/reject/${userId}`, {
         date: formattedDate,
         email: email,
         daysofleave: daysofleave,

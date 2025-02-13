@@ -21,7 +21,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
-
+// https://mini-hrms.onrender.com/  
 // MongoDB Connection
 const mongoURI =  "mongodb+srv://manojshakya54:VV2F0ZbarJSRpstc@cluster0.htdtk.mongodb.net/";
 mongoose.connect(mongoURI, {

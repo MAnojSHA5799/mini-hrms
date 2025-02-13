@@ -31,7 +31,7 @@ const EditProfile = () => {
     try {
       const userId = formData.emp_code; // Use emp_code from formData
       const { emp_code, ...filteredFormData } = formData; // Remove emp_code from the data to avoid sending it again
-      await axios.put(`http://localhost:4000/userProfiles/${userId}`, filteredFormData); // Make PUT request to update profile
+      await axios.put(`https://mini-hrms.onrender.com/userProfiles/${userId}`, filteredFormData); // Make PUT request to update profile
       
       // Reset form after successful update
       setFormData({
