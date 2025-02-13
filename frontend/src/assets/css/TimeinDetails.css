@@ -1,0 +1,149 @@
+/* CSS for UserTimeinDetails Page */
+/* body {
+  background-color: #e0f3f6;
+}
+
+.container {
+  display: flex;
+} */
+
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.main-content h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 24px;
+}
+
+.table {
+  background-color: white;
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+  border: 1px solid #c8c8c8;
+  font-size: 14px;
+  padding: 10px;
+  text-align: center;
+}
+
+.table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+}
+
+/* .table td {
+  
+} */
+
+.table .highlight {
+  background-color: #def7d8;
+  color: #fc7b02;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+/* Responsive Pagination */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination a {
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  margin: 5px 2px;
+  text-decoration: none;
+  color: #929292;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.pagination a.active {
+  background-color: #fa7414;
+  color: white;
+}
+
+.pagination a:hover {
+  background-color: #fa7414;
+  color: white;
+}
+
+.pagination a.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Adjust pagination for smaller devices */
+@media (max-width: 768px) {
+  .pagination a {
+    padding: 8px 12px;
+    font-size: 14px;
+    margin: 3px 1px;
+  }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+  .pagination a {
+    padding: 6px 10px;
+    font-size: 12px;
+    margin: 2px 1px;
+  }
+}
+
+
+
+/* Style for time entries with green background and white text */
+.time_in {
+  background-color: #53b94a; /* Bright green background */
+  color: white; /* White text */
+  font-weight: bold; /* Bold font */
+  border-radius: 5px; /* Rounded corners */
+  padding: 5px 10px; /* Padding for space around the text */
+  display: inline-block; /* To apply padding properly */
+  text-align: center; /* Center the text */
+}
+
+/* Style for the table to alternate row colors */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9f9f9; /* Light grey for odd rows */
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: #f9f9f9; /* White for even rows */
+}
+
+/* Style for empty cells like '--' */
+.empty-cell {
+  color: #f9f9f9; /* Grey text for empty cells */
+  font-style: italic; /* Italic style to emphasize the emptiness */
+}
+
+
+/* Add this CSS to adjust table padding and responsiveness */
+.table-responsive {
+  padding-top: 70px; /* Adjusts top padding for table heading */
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto; /* Ensure responsive behavior for smaller devices */
+  }
+}
+
+@media (min-width: 768px) {
+  .table-responsive {
+    padding: 0; /* Reset padding for larger screens */
+  }
+}

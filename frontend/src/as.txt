@@ -1,0 +1,48 @@
+app.put('/leavedetails/:id', async (req, res) => {
+  const id = req.params.id;
+  const updatedLeave = req.body;
+  console.log("770",updatedLeave)
+  const currentDate = new Date().toISOString().slice(0, 10);
+
+  try {
+    // Update leave details in the database
+    const query = `
+      UPDATE leave_application
+      SET
+        leavetype = $1,
+        startdate = $2,
+        enddate = $3,
+        daysofleave = $4,
+        reason = $5,
+        status = $6,
+        applied_leave_dates = $7
+      WHERE id = $8
+    `;
+    
+    const values = [
+      updatedLeave.leavetype,
+      updatedLeave.startdate,
+      updatedLeave.enddate,
+      updatedLeave.daysofleave,
+      updatedLeave.reason,
+      updatedLeave.status,
+      updatedLeave.applied_leave_dates,
+      id
+    ];
+
+    const result = await connection.query(query, values);
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ error: "Leave application not found" });
+      return;
+    }
+
+   
+
+    res.status(200).json({ message: 'Leave application updated and email sent' });
+
+  } catch (error) {
+    console.error("Error updating leave data:", error);
+    res.status(500).json({ error: "Failed to update leave data" });
+  }
+});

@@ -1,0 +1,186 @@
+.leave-form-container {
+    background-color: #B6D1E0; /* Light blue background */
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    margin: 0 auto;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333; 
+  }
+  
+  .leave-form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .leave-form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .leave-form input,
+  .leave-form select,
+  .leave-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  /* .radio-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .radio-group label {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  } */
+  
+  .submit-btn {
+    background-color: #FF7A3D; /* Orange color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  .submit-btn:hover {
+    background-color: #ff6633;
+  }
+  
+
+
+
+
+/* LeaveForm.css */
+
+.leave-form-container {
+  background-color: #def3fd; /* Light blue background */
+  padding: 20px;
+  border-radius: 10px;
+  width: 650px; /* Increased width */
+  margin: 0 auto; /* Center the form horizontally */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  line-height: 2.2; /* Increased line spacing for better readability */
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 1.6em; /* Slightly increased font size */
+}
+
+.form-group {
+  margin-bottom: 20px; /* Increased margin for more spacing between fields */
+}
+
+.form-group label {
+  display: block; 
+  font-family: Arial, sans-serif;
+  font-size: 1em; /* Increased label font size */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%; /* Keep input width 100% of the container */
+  height: 50%;
+  padding: 10px; /* Increased padding for larger input boxes */
+  font-size: 1em; /* Slightly larger font size */
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input[type="radio"] {
+  margin-right: 5px;
+}
+
+input[type="date"] {
+  width: 100%;
+  height: 50%;
+  padding: 10px; /* Increased padding for better visibility */
+  font-size: 0.6em; /* Slightly larger font size */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  background-color: #ff6a33; /* Orange submit button */
+  color: #fff;
+  border: none;
+  padding: 12px 20px; /* Slightly increased padding */
+  font-size: 1em;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #e05b29;
+}
+
+.date-picker {
+  width: 100%;
+  height: 50%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.checkbox-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkbox-group label {
+  font-size: 1em; /* Slightly larger checkbox label font */
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Mobile View Adjustments */
+@media only screen and (max-width: 600px) {
+  .leave-form-container {
+      width: 90%; /* Reduce the form width to fit smaller screens */
+      padding: 15px; /* Reduce padding for mobile */
+  }
+
+  h2 {
+      font-size: 1.4em; /* Slightly smaller font size for headings */
+  }
+
+  .form-control, input[type="date"], button[type="submit"] {
+      padding: 8px; /* Reduce padding for input fields */
+      font-size: 0.9em; /* Smaller font size */
+  }
+
+  .checkbox-group {
+      flex-direction: column; /* Stack checkboxes vertically */
+      align-items: flex-start; /* Align left */
+  }
+
+  button[type="submit"] {
+      font-size: 0.9em; /* Slightly smaller submit button font */
+  }
+}

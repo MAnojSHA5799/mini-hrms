@@ -1,0 +1,241 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
+body {
+	font-family: "DM Sans", sans-serif;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 20px 0;
+	font-size: 16px;
+	font-family: sans-serif;
+  }
+  
+  thead th {
+	background-color: #E55A1B;
+	color: #ffffff;
+	font-weight: bold;
+	/* font-size: 14px; */
+	padding: 12px 15px;
+	text-align: center;
+  }
+  
+  tbody td {
+	padding: 10px 15px;
+	border-bottom: 1px solid #dddddd;
+	text-align: center;
+	font-size: 14px;
+  }
+  
+ 
+  tbody .status {
+	text-align: center;
+  }
+  
+  tbody .status .approved {
+	display: inline-block;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #28a745; 
+  }
+  
+  @media (max-width: 768px) {
+	table, thead, tbody, th, td, tr {
+	  display: block;
+	}
+  
+	thead tr {
+	  display: none;
+	}
+  
+	tbody tr {
+	  margin-bottom: 15px;
+	  border: 1px solid #dddddd;
+	  border-radius: 8px;
+	  padding: 10px;
+	}
+  
+	tbody td {
+	  display: flex;
+	  justify-content: space-between;
+	  padding: 8px 10px;
+	  position: relative;
+	}
+  
+	tbody td::before {
+	  content: attr(data-label);
+	  font-weight: bold;
+	  color: #1a1a1a;
+	  min-width: 100px;
+	  text-align: left;
+	}
+  }
+  
+  td.status span {
+	font-size: 12px;
+	border-radius: 3px;
+	padding: 4px 8px;
+  }
+  
+  td.status span.approved {
+	color: #FFFFFF;
+	background-color: #00C455;
+	display: inline-block;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-weight: bold;
+	color: #ffffff;
+  }
+  
+  td.status span.decline {
+	color: #FFFFFF;
+	display: inline-block;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #F13426;
+  }
+  
+  td.status span.pending {
+	color: #132D4A;
+	display: inline-block;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #d3cb28;
+  }
+
+.filter-container {
+  display: flex;            
+  align-items: center;      
+  margin-top: 20px;        
+  margin-bottom: 20px;
+}
+
+label[for="monthFilter"] {
+  font-size: 18px;          
+  font-weight: bold;        
+  color: #333;              
+  margin-right: 10px;       
+}
+
+#monthFilter {
+  width: 200px;             
+  padding: 8px 12px;     
+  border-radius: 5px;       
+  border: 1px solid #ccc; 
+  font-size: 16px;        
+  background-color: #f9f9f9;
+  color: #333;      
+  outline: none;      
+  transition: border-color 0.3s ease; 
+}
+
+#monthFilter:focus {
+  border-color: #E55A1B; 
+}
+.pro-1 {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	display: block;
+	margin: 0 auto;
+	border: 1px solid #ccc; 
+	border-radius: 50px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  }
+  .profile-avatar-1 {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: rgb(0, 0, 0);
+   
+	color: black; 
+	margin-left: 20px;
+  }
+  .pro {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	display: block; /* Remove any default inline layout */
+	margin: 0 auto; /* Center the image horizontally */
+	border: 1px solid #ccc; /* Add a border for better visibility */
+	border-radius: 50px; /* Add rounded corners */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+	
+  }
+  .profile-avatar {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: rgb(0, 0, 0);
+   
+	color: black; /* or any other text color you want */
+	margin-left: 10px;
+  }
+ 
+
+  .leave-action-buttons {
+	display: flex;
+	gap: 10px; /* Adds space between buttons */
+	justify-content: center; /* Centers the buttons within the cell */
+  }
+  
+  .approve-button, .reject-button {
+	padding: 19px 16px;
+	font-size: 14px;
+	font-weight: bold;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+  }
+  
+
+  .approve-button,
+.reject-button {
+  display: inline-block;
+  padding: 10px 20px; /* Adjust padding to suit your layout */
+  font-size: 14px; /* Consistent font size */
+  text-align: center;
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer;
+  width: 93px; /* Adjust button width */
+  height: 40px; /* Adjust button height */
+}
+
+.approve-button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+}
+
+.reject-button {
+  background-color: #F44336; /* Red background */
+  color: white; /* White text */
+}
+
+.approve-button:disabled{
+	background-color: #a5d6a7; /* Gray background for disabled buttons */
+	color: #474444; /* Dark gray text for disabled buttons */
+	cursor: not-allowed; /* Change cursor for disabled state */
+}
+
+
+.reject-button:disabled {
+  background-color: #ef9a9a; /* Gray background for disabled buttons */
+  color: #474444; /* Dark gray text for disabled buttons */
+  cursor: not-allowed; /* Change cursor for disabled state */
+}
+
+/* Optional hover effect */
+.approve-button:not(:disabled):hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.reject-button:not(:disabled):hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}
