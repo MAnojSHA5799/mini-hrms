@@ -761,6 +761,49 @@ console.log("749",employees)
   }
 });
 
+app.get('/api/approved-data', async (req, res) => {
+  try {
+    const status = "Approved";
+
+    // Fetch data from MongoDB where status is "Approved"
+    const approvedLeaves = await LeaveApplication.find({ status }, 'name emp_code status applied_leave_dates');
+
+    res.json(approvedLeaves);
+  } catch (error) {
+    console.error('Error fetching approved leave data:', error);
+    res.status(500).json({ error: 'Error fetching approved leave data' });
+  }
+});
+
+app.get('/api/rejected-data', async (req, res) => {
+  try {
+    const status = "Rejected";
+
+    // Fetch rejected leave applications from MongoDB
+    const rejectedLeaves = await LeaveApplication.find({ status }, 'name emp_code status applied_leave_dates');
+
+    res.json(rejectedLeaves);
+  } catch (error) {
+    console.error('Error fetching rejected leave data:', error);
+    res.status(500).json({ error: 'Error fetching rejected leave data' });
+  }
+});
+
+app.get('/api/leave-data', async (req, res) => {
+  try {
+    const status = "Pending";
+
+    // Fetch pending leave applications from MongoDB
+    const pendingLeaves = await LeaveApplication.find({ status }, 'name emp_code status applied_leave_dates');
+
+    res.json(pendingLeaves);
+  } catch (error) {
+    console.error('Error fetching leave data:', error);
+    res.status(500).json({ error: 'Error fetching leave data' });
+  }
+});
+
+
 
 // Update Usered (Protected)
 app.put("/users/:id", verifyToken, async (req, res) => {

@@ -79,7 +79,7 @@ const Dashboard = () => {
   const fetchTrackingLeaves = async () => {
     try {
       const response = await axios.get(
-        "https://blitzlearning-lms.onrender.com/api/tracking-leaves1"
+        "https://mini-hrms.onrender.com/api/tracking-leaves1"
       );
       setTrackingData(response.data);
       setFilterTrackingData(response.data);
@@ -110,7 +110,7 @@ const Dashboard = () => {
   const fetchRejectedData = async () => {
     try {
       const response = await axios.get(
-        "https://blitzlearning-lms.onrender.com/api/Rejected-data"
+        "https://mini-hrms.onrender.com/api/Rejected-data"
       );
       setRejectedData(response.data);
       setFilterRectedData(response.data);
@@ -141,7 +141,7 @@ const Dashboard = () => {
   const fetchApprovedData = async () => {
     try {
       const response = await axios.get(
-        "https://blitzlearning-lms.onrender.com/api/approved-data"
+        "https://mini-hrms.onrender.com/api/approved-data"
       );
       setApprovedData(response.data);
       setFilteredData(response.data); // Initially set filtered data to all approved data
@@ -180,9 +180,9 @@ const Dashboard = () => {
   }
   const fetchAverageTimeIn = async () => {
     try {
-      // Replace 'https://blitzlearning-lms.onrender.com' with your actual backend URL
+      // Replace 'https://mini-hrms.onrender.com' with your actual backend URL
       const response = await axios.get(
-        "https://blitzlearning-lms.onrender.com/getAverageTimeIn"
+        "https://mini-hrms.onrender.com/getAverageTimeIn"
       );
       const data = response.data;
 
@@ -197,7 +197,7 @@ const Dashboard = () => {
   const fetchAverageWorkTime = async () => {
     try {
       const response = await axios.get(
-        "https://blitzlearning-lms.onrender.com/getAverageWorkTime"
+        "https://mini-hrms.onrender.com/getAverageWorkTime"
       );
       const data = response.data;
 
@@ -212,7 +212,7 @@ const Dashboard = () => {
   const fetchAverageTimeOut = async () => {
     try {
       const response = await axios.get(
-        "https://blitzlearning-lms.onrender.com/getAverageTimeOut"
+        "https://mini-hrms.onrender.com/getAverageTimeOut"
       );
       const data = response.data;
 
@@ -226,7 +226,7 @@ const Dashboard = () => {
 
   const fetchLeaveData = async () => {
     try {
-      const response = await axios.get("https://blitzlearning-lms.onrender.com/api/leave-data");
+      const response = await axios.get("https://mini-hrms.onrender.com/api/leave-data");
       setLeaveData(response.data);
     } catch (error) {
       console.error("Error fetching leave data:", error);
@@ -253,7 +253,7 @@ const Dashboard = () => {
   );
   return (
     <div>
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-3">
+      {/* <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-3">
         <Widget
           icon={<MdBarChart className="h-7 w-7" color="#ff5722" />}
           title={"Average in time of team"}
@@ -269,7 +269,7 @@ const Dashboard = () => {
           title={"Average out time of teams"}
           subtitle={averageTimeOut}
         />
-      </div>
+      </div> */}
 
       <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-2">
         <Container className="timesheet-container p-0">
@@ -427,144 +427,15 @@ const Dashboard = () => {
         </Container>
       </div>
 
-      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-1 xl:grid-cols-1">
-        <Container className="timesheet-container p-0">
-          <Row>
-            <Col className="text-center">
-              <h5 className="timesheet-title">Leaves Tracker</h5>
-              <div className="filter-container">
-                <label htmlFor="monthFilter">Filter by Month:</label>
-                <select
-                  id="monthFilter"
-                  value={selectedMonthTrackingData}
-                  onChange={handleMonthChangeTracking}
-                >
-                  <option value="">All</option>
-                  <option value="0">January</option>
-                  <option value="1">February</option>
-                  <option value="2">March</option>
-                  <option value="3">April</option>
-                  <option value="4">May</option>
-                  <option value="5">June</option>
-                  <option value="6">July</option>
-                  <option value="7">August</option>
-                  <option value="8">September</option>
-                  <option value="9">October</option>
-                  <option value="10">November</option>
-                  <option value="11">December</option>
-                </select>
-              </div>
-              <table>
-                <tbody>
-                  {filterTrackingData.length > 0 ? (
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Emp Code</th>
-                          <th>Profile</th>
-                          <th>Name</th>
-                          <th>Applied Date</th>
-                          <th>Applied Leaves Days</th>
-                          <th>Leaves Taken</th>
-                          <th>Remaining Leaves</th>
-                          <th>Leave Meter</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filterTrackingData.map((leave) => (
-                          <tr key={leave.employeeCode}>
-                            <td data-label="Emp Code" className="text-center">
-                              {leave.emp_code}
-                            </td>
-                            <td data-label="Profile" className="text-center">
-                              <div className="profile-avatar-1">
-                                {leave &&
-                                  leave.data &&
-                                  (() => {
-                                    const base64String = arrayBufferToBase64(
-                                      leave.data.data
-                                    );
-                                    return (
-                                      <img
-                                        className="pro-1"
-                                        src={`data:image/png;base64,${base64String}`}
-                                        alt="Profile"
-                                      />
-                                    );
-                                  })()}
-                              </div>
-                            </td>
-                            <td data-label="Name" className="text-center">
-                              {leave.name}
-                            </td>
-                            <td
-                              data-label="Applied Date"
-                              className="text-center"
-                            >
-                              {formatDate(leave.applied_leave_dates)}
-                            </td>
-                            <td
-                              data-label="Applied Leaves Days"
-                              className="text-center"
-                            >
-                              {leave.daysofleave}
-                            </td>
-                            <td
-                              data-label="Leaves Taken"
-                              className="text-center"
-                            >
-                              {leave.taking_leaves}
-                            </td>
-                            <td
-                              data-label="Remaining Leaves"
-                              className="text-center"
-                            >
-                              {leave.balance_leave}/{leave.total_leaves}
-                            </td>
-                            <td data-label="Leave Meter">
-                              <ProgressBar
-                                completed={(
-                                  (leave.taking_leaves / leave.total_leaves) *
-                                  100
-                                ).toFixed(1)}
-                                bgColor={
-                                  leave.total_leaves - leave.taking_leaves > 5
-                                    ? "#2ecc71"
-                                    : leave.total_leaves - leave.taking_leaves >
-                                      7
-                                    ? "#f1c40f"
-                                    : "#e74c3c"
-                                }
-                                labelAlignment="outside"
-                                labelColor="#060708"
-                                height={10}
-                                customLabel={`${(
-                                  (leave.taking_leaves / leave.total_leaves) *
-                                  100
-                                ).toFixed(1)}%`}
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p>No leaves in this month.</p>
-                  )}
-                </tbody>
-              </table>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      {/*  */}
 
       <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-3 xl:grid-cols-3">
         <div className="grid grid-cols-1 rounded-[20px]">
           <MiniCalendar />
         </div>
-        <div className="grid grid-cols-1 rounded-[20px]">
+        {/* <div className="grid grid-cols-1 rounded-[20px]">
           <Widget
-            // icon={<MdOutlineHolidayVillage className="h-5 w-5" color='#ff5722' />}
+            icon={<MdOutlineHolidayVillage className="h-5 w-5" color='#ff5722' />}
             title="Holiday"
             subtitle={
               <div>
@@ -584,7 +455,7 @@ const Dashboard = () => {
               </div>
             }
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
