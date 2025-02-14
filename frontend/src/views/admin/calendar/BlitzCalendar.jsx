@@ -68,7 +68,13 @@ const Calendar = () => {
 
   return (
     <div>
-      { showForm ? (
+      {isLoading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : showForm ? (
         <div className="p-4 border rounded-lg shadow-md bg-white w-1/2 mx-auto">
           <h2 className="text-lg font-semibold mb-4">Select Employee & Enter Details</h2>
           
