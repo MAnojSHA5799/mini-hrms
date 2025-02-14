@@ -169,21 +169,21 @@ console.log(localDate);
     const afternoonEnd = 14 * 3600 + 30 * 60; // 14:30:00 in seconds
   
     // Check for leave conditions
-    if (Array.isArray(leaveData) && leaveData.length > 0) {
-      const leave = leaveData[0]; // Now safe to access the first item in leaveData
-      if (leave) {
-        if (leave.leave_duration === "FirstHalf" && (currentTime < afternoonStart || currentTime > afternoonEnd)) {
-          alert("For FirstHalf leave, you can Time In only between 1:00 PM to 2:30 PM.");
-          return;
-        } else if (leave.leave_duration === "SecondHalf" && currentTime > morningLimit) {
-          alert("For SecondHalf leave, you cannot Time In after 10:15 AM.");
-          return;
-        }
-      }
-    } else if (currentTime > morningLimit) {
-      alert("The current time is after 09:30:00. You cannot Time In.");
-      return;
-    }
+    // if (Array.isArray(leaveData) && leaveData.length > 0) {
+    //   const leave = leaveData[0]; // Now safe to access the first item in leaveData
+    //   if (leave) {
+    //     if (leave.leave_duration === "FirstHalf" && (currentTime < afternoonStart || currentTime > afternoonEnd)) {
+    //       alert("For FirstHalf leave, you can Time In only between 1:00 PM to 2:30 PM.");
+    //       return;
+    //     } else if (leave.leave_duration === "SecondHalf" && currentTime > morningLimit) {
+    //       alert("For SecondHalf leave, you cannot Time In after 10:15 AM.");
+    //       return;
+    //     }
+    //   }
+    // } else if (currentTime > morningLimit) {
+    //   alert("The current time is after 09:30:00. You cannot Time In.");
+    //   return;
+    // }
   
     const confirmation = window.confirm("Are you sure you want to Time In?");
     if (confirmation) {
@@ -214,10 +214,10 @@ console.log(localDate);
     const currentTime =
       now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
     const targetTime = 18 * 3600 + 20 * 60; // 9:45:00 in seconds
-    if (currentTime <= targetTime) {
-      alert("The current time is before 06:20:00. You cannot Time Out.");
-      return;
-    }
+    // if (currentTime <= targetTime) {
+    //   alert("The current time is before 06:20:00. You cannot Time Out.");
+    //   return;
+    // }
     const confirmation = window.confirm("Are you sure you want to Time out?");
     if (confirmation) {
       try {
