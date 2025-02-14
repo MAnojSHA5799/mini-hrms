@@ -15,8 +15,8 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:3000",
-  // origin: "https://mini-hrms.vercel.app",
+  // origin: "http://localhost:3000",
+  origin: "https://mini-hrms.vercel.app",
   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
