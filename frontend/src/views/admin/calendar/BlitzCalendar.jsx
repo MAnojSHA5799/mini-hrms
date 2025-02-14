@@ -79,12 +79,12 @@ const Calendar = () => {
             <tbody className="text-center">
               {leaveData.map((employee, index) => (
                 <tr key={employee.emp_code}>
-                  <td>{index + 1}</td>
-                  <td>{employee.name}</td>
-                  <td>{employee.total_work_days || "-"}</td>
-                  <td>{employee.total_days_of_leave || "-"}</td>
-                  <td>{employee.present_days || "-"}</td>
-                  <td>{employee.calculated_salary || "-"}</td>
+                  <td data-label="Id">{index + 1}</td>
+                  <td data-label="Name">{employee.name}</td>
+                  <td data-label="Total Workdays">{employee.total_work_days || "-"}</td>
+                  <td data-label="Total Leave">{employee.total_days_of_leave || "-"}</td>
+                  <td data-label="Present Days">{employee.present_days || "-"}</td>
+                  <td data-label="Salary">{employee.calculated_salary || "-"}</td>
                   <td>
                     <button
                       onClick={() => handleCalculateClick(employee)}
