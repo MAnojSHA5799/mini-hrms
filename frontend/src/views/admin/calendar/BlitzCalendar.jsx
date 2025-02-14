@@ -20,11 +20,11 @@ const Calendar = () => {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       setEmpCode(parsedUser.emp_code);
-      fetchLeaveData();
+      fetchLeaveData(parsedUser.emp_code);
     }
   }, []);
 
-  const fetchLeaveData = async () => {
+  const fetchLeaveData = async (employeeCode) => {
     try {
       const response = await axios.get(`https://mini-hrms.onrender.com/allpayroll`);
       console.log(response);
