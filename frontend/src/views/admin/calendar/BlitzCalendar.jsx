@@ -27,8 +27,11 @@ const Calendar = () => {
   const fetchLeaveData = async (employeeCode) => {
     try {
       const response = await axios.get(`https://mini-hrms.onrender.com/allpayroll`);
-      console.log(response);
-      setLeaveData(response.data.employeeLeaveData); // Assuming response has employeeLeaveData
+      if (response.data && response.data.employeeLeaveData) {
+        setLeaveData(response.data.employeeLeaveData); // Assuming response has employeeLeaveData
+      } else {
+        console.error("No employeeLeaveData found in response");
+      }
       setIsLoading(false); // Stop loading
     } catch (error) {
       console.error("Error fetching leave data:", error);
