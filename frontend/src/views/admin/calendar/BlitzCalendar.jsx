@@ -2,24 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Calendar = () => {
-  const [salary, setSalary] = useState(null);
-  const [workDays, setWorkDays] = useState(null);
   const [leaveData, setLeaveData] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [salary, setSalary] = useState(0);
+  const [workDays, setWorkDays] = useState(0);
   const [calculatedSalary, setCalculatedSalary] = useState(null);
-  const [selectedEmployee, setSelectedEmployee] = useState("");
-  const [user, setUser] = useState(null);
-  const [empCode, setEmpCode] = useState("");
-  const [isLoading, setIsLoading] = useState(true); 
-  const [showForm, setShowForm] = useState(true); 
+  const [showPopup, setShowPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setEmpCode(parsedUser.emp_code);
-      fetchLeaveData();
-    }
+    fetchLeaveData();
   }, []);
 
   const fetchLeaveData = async () => {
@@ -27,7 +19,6 @@ const Calendar = () => {
       const response = await axios.get("https://mini-hrms.onrender.com/allpayroll");
       if (response.data && Array.isArray(response.data.employeeLeaveData)) {
         setLeaveData(response.data.employeeLeaveData);
-        console.log("Leave data fetched:", response.data.employeeLeaveData);
       } else {
         console.error("No valid employeeLeaveData found in response");
       }
@@ -38,25 +29,29 @@ const Calendar = () => {
     }
   };
 
-  const handleEmployeeSelect = (emp_code) => {
-    setSelectedEmployee(emp_code);
-    const employee = leaveData.find((emp) => emp.emp_code === emp_code);
-    if (employee) {
-      setSalary(employee.basic_salary || 0);
-      setWorkDays(employee.total_work_days || 0);
-      console.log("Employee selected:", employee);
-    }
+  const handleCalculateClick = (employee) => {
+    setSelectedEmployee(employee);
+    setSalary(employee.basic_salary || 0);
+    setWorkDays(employee.total_work_days || 0);
+    setShowPopup(true);
   };
 
   const handleSubmit = () => {
-    setShowForm(false);
-    const selectedEmployeeData = leaveData.find((emp) => emp.emp_code === selectedEmployee);
-    if (selectedEmployeeData) {
-      const totalLeaves = selectedEmployeeData.total_days_of_leave || 0;
+    if (selectedEmployee) {
+      const totalLeaves = selectedEmployee.total_days_of_leave || 0;
       const presentDays = workDays - totalLeaves;
       const calculatedSalaryValue = (salary / workDays) * presentDays;
       setCalculatedSalary(calculatedSalaryValue.toFixed(2));
+      
+      setLeaveData((prevData) =>
+        prevData.map((emp) =>
+          emp.emp_code === selectedEmployee.emp_code
+            ? { ...emp, total_work_days: workDays, present_days: presentDays, calculated_salary: calculatedSalaryValue.toFixed(2) }
+            : emp
+        )
+      );
     }
+    setShowPopup(false);
   };
 
   return (
@@ -66,58 +61,6 @@ const Calendar = () => {
           <div className="spinner-border" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        </div>
-      ) : showForm ? (
-        <div className="p-4 border rounded-lg shadow-md bg-white w-1/2 mx-auto">
-          <h2 className="text-lg font-semibold mb-4">Select Employee & Enter Details</h2>
-
-          {/* Employee Dropdown */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700">Select Employee</label>
-            <select
-              value={selectedEmployee}
-              onChange={(e) => handleEmployeeSelect(e.target.value)}
-              className="w-full p-2 border rounded-md"
-            >
-              <option value="">Select Employee</option>
-              {leaveData.map((employee) => (
-                <option key={employee.emp_code} value={employee.emp_code}>
-                  {employee.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Basic Salary Input */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700">Basic Salary</label>
-            <input
-              type="number"
-              value={salary || ""}
-              onChange={(e) => setSalary(Number(e.target.value))}
-              className="w-full p-2 border rounded-md"
-            />
-          </div>
-
-          {/* Working Days Input */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700">Working Days</label>
-            <input
-              type="number"
-              value={workDays || ""}
-              onChange={(e) => setWorkDays(Number(e.target.value))}
-              className="w-full p-2 border rounded-md"
-            />
-          </div>
-
-          {/* Submit Button */}
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            disabled={!selectedEmployee || !salary || !workDays}
-          >
-            Submit
-          </button>
         </div>
       ) : (
         <>
@@ -130,23 +73,63 @@ const Calendar = () => {
                 <th className="p-2 border">Total Days of Leave</th>
                 <th className="p-2 border">Present Days</th>
                 <th className="p-2 border">Calculated Salary</th>
+                <th className="p-2 border">Action</th>
               </tr>
             </thead>
             <tbody className="text-center">
-              {leaveData
-                .filter((employee) => employee.emp_code === selectedEmployee)
-                .map((employee, index) => (
-                  <tr key={employee.emp_code}>
-                    <td>{index + 1}</td>
-                    <td>{employee.name}</td>
-                    <td>{workDays}</td>
-                    <td>{employee.total_days_of_leave}</td>
-                    <td>{workDays - employee.total_days_of_leave}</td>
-                    <td>{calculatedSalary}</td>
-                  </tr>
-                ))}
+              {leaveData.map((employee, index) => (
+                <tr key={employee.emp_code}>
+                  <td>{index + 1}</td>
+                  <td>{employee.name}</td>
+                  <td>{employee.total_work_days || "-"}</td>
+                  <td>{employee.total_days_of_leave || "-"}</td>
+                  <td>{employee.present_days || "-"}</td>
+                  <td>{employee.calculated_salary || "-"}</td>
+                  <td>
+                    <button
+                      onClick={() => handleCalculateClick(employee)}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    >
+                      Calculate
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+
+          {showPopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
+                <h2 className="text-lg font-semibold mb-4">Enter Details</h2>
+                <div className="mb-3">
+                  <label className="block text-sm font-medium text-gray-700">Basic Salary</label>
+                  <input
+                    type="number"
+                    value={salary}
+                    onChange={(e) => setSalary(Number(e.target.value))}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="block text-sm font-medium text-gray-700">Total Work Days</label>
+                  <input
+                    type="number"
+                    value={workDays}
+                    onChange={(e) => setWorkDays(Number(e.target.value))}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <button
+                  onClick={handleSubmit}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                  disabled={!salary || !workDays}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
