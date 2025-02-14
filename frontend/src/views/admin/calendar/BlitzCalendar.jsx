@@ -15,13 +15,13 @@ const Calendar = () => {
   const [showForm, setShowForm] = useState(true); // Show/hide form for inputs
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setEmpCode(parsedUser.emp_code);
-      fetchLeaveData(parsedUser.emp_code);
-    }
+    // const storedUser = localStorage.getItem("user");
+    // if (storedUser) {
+    //   const parsedUser = JSON.parse(storedUser);
+    //   setUser(parsedUser);
+    //   setEmpCode(parsedUser.emp_code);
+    //   fetchLeaveData(parsedUser.emp_code);
+    // }
   }, []);
 
   const fetchLeaveData = async (employeeCode) => {
