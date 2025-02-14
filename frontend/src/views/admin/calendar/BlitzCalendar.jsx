@@ -3,7 +3,7 @@ import axios from "axios";
 import { MdBarChart, MdDashboard } from "react-icons/md";
 import { IoDocuments } from "react-icons/io5";
 
-const BlitzCalendar = () => {
+const Calendar = () => {
   const [salary, setSalary] = useState(null);
   const [workDays, setWorkDays] = useState(null);
   const [leaveData, setLeaveData] = useState([]);
@@ -159,4 +159,4 @@ const BlitzCalendar = () => {
   );
 };
 
-export default BlitzCalendar;
+export default Calendar;

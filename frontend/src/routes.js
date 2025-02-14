@@ -19,7 +19,7 @@ import AddUser from "../src/views/admin/adduserform/adduser";
 import EditLeave from "../src/views/user/tables/components/EditLeave";
 import EditLeaveDetail from "../src/views/admin/leavedetails/EditLeaveDetail";
 
-import Calendar from "../src/views/admin/calendar/BlitzCalendar";
+import Calendar from "../src/views/admin/calendar/Calendar";
 import BlitzCalendar from "../src/views/user/calendar/BlitzCalendar";
 import LeaveDetails from "views/admin/leavedetails";
 
