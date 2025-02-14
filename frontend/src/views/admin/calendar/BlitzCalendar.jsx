@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MdBarChart, MdDashboard } from "react-icons/md";
-import { IoDocuments } from "react-icons/io5";
 
 const Calendar = () => {
   const [salary, setSalary] = useState(null);
@@ -11,7 +9,6 @@ const Calendar = () => {
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [user, setUser] = useState(null);
   const [empCode, setEmpCode] = useState("");
-  const [isLoading, setIsLoading] = useState(true); // Loading state
   const [showForm, setShowForm] = useState(true); // Show/hide form for inputs
 
   useEffect(() => {
@@ -26,16 +23,15 @@ const Calendar = () => {
 
   const fetchLeaveData = async (employeeCode) => {
     try {
-      const response = await axios.get(`https://mini-hrms.onrender.com/allpayroll`);
+      const response = await axios.get("https://mini-hrms.onrender.com/allpayroll");
       if (response.data && response.data.employeeLeaveData) {
         setLeaveData(response.data.employeeLeaveData); // Assuming response has employeeLeaveData
+        console.log("Leave data fetched:", response.data.employeeLeaveData); // Debugging log
       } else {
         console.error("No employeeLeaveData found in response");
       }
-      setIsLoading(false); // Stop loading
     } catch (error) {
       console.error("Error fetching leave data:", error);
-      setIsLoading(false); // Stop loading on error
     }
   };
 
@@ -47,6 +43,7 @@ const Calendar = () => {
     if (employee) {
       setSalary(employee.basic_salary); // Set salary from selected employee
       setWorkDays(employee.total_work_days); // Set work days from selected employee
+      console.log("Employee selected:", employee); // Debugging log
     }
   };
 
@@ -71,16 +68,11 @@ const Calendar = () => {
 
   return (
     <div>
-      {isLoading ? (
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
-      ) : showForm ? (
+      {/* Show form if data is not loaded yet */}
+      {showForm ? (
         <div className="p-4 border rounded-lg shadow-md bg-white w-1/2 mx-auto">
           <h2 className="text-lg font-semibold mb-4">Select Employee & Enter Details</h2>
-          
+
           {/* Employee Dropdown */}
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700">Select Employee</label>
@@ -90,11 +82,15 @@ const Calendar = () => {
               className="w-full p-2 border rounded-md"
             >
               <option value="">Select Employee</option>
-              {leaveData.map((employee) => (
-                <option key={employee.emp_code} value={employee.emp_code}>
-                  {employee.name}
-                </option>
-              ))}
+              {leaveData.length > 0 ? (
+                leaveData.map((employee) => (
+                  <option key={employee.emp_code} value={employee.emp_code}>
+                    {employee.name}
+                  </option>
+                ))
+              ) : (
+                <option value="">No Employees Available</option>
+              )}
             </select>
           </div>
 
@@ -131,6 +127,7 @@ const Calendar = () => {
         </div>
       ) : (
         <>
+          {/* Show employee details and calculated salary after form submission */}
           <table className="mt-3 w-full table-auto border-collapse">
             <thead className="text-center bg-gray-200">
               <tr>
