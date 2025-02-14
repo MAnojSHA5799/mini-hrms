@@ -82,7 +82,7 @@ const Calendar = () => {
               <option value="">Select Employee</option>
               {leaveData.map((employee) => (
                 <option key={employee.emp_code} value={employee.emp_code}>
-                  {employee.name} ({employee.emp_code})
+                  {employee.name}
                 </option>
               ))}
             </select>
