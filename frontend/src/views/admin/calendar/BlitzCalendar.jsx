@@ -15,18 +15,19 @@ const Calendar = () => {
   const [showForm, setShowForm] = useState(true); // Show/hide form for inputs
 
   useEffect(() => {
-    // const storedUser = localStorage.getItem("user");
-    // if (storedUser) {
-    //   const parsedUser = JSON.parse(storedUser);
-    //   setUser(parsedUser);
-    //   setEmpCode(parsedUser.emp_code);
-    //   fetchLeaveData(parsedUser.emp_code);
-    // }
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setEmpCode(parsedUser.emp_code);
+      fetchLeaveData(parsedUser.emp_code);
+    }
   }, []);
 
   const fetchLeaveData = async (employeeCode) => {
     try {
       const response = await axios.get(`https://mini-hrms.onrender.com/allpayroll`);
+      console.log(response);
       setLeaveData(response.data.employeeLeaveData); // Assuming response has employeeLeaveData
       setIsLoading(false); // Stop loading
     } catch (error) {
