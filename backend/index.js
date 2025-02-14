@@ -673,28 +673,28 @@ app.get("/payroll", async (req, res) => {
     const { emp_code } = req.query;
     
     if (!emp_code) {
-      console.log("❌ Missing emp_code in request");
+      console.log(" Missing emp_code in request");
       return res.status(400).json({ error: "Employee code is required" });
     }
 
-    console.log(`🔍 Fetching payroll data for emp_code: ${emp_code}`);
+    console.log(` Fetching payroll data for emp_code: ${emp_code}`);
 
     const leaves = await LeaveApplication.find({ emp_code });
 
     if (leaves.length === 0) {
-      console.log(`⚠️ No payroll data found for emp_code: ${emp_code}`);
+      console.log(` No payroll data found for emp_code: ${emp_code}`);
       return res.status(200).json({ message: "No payroll data found", total_days_of_leave: 0, leaves: [] });
     }
 
     // Calculate total days_of_leave
     const totalDaysOfLeave = leaves.reduce((sum, record) => sum + record.days_of_leave, 0);
 
-    console.log(`✅ Payroll Data for emp_code ${emp_code}:`, JSON.stringify(leaves, null, 2));
-    console.log(`📊 Total Days of Leave for emp_code ${emp_code}: ${totalDaysOfLeave}`);
+    console.log(` Payroll Data for emp_code ${emp_code}:`, JSON.stringify(leaves, null, 2));
+    console.log(` Total Days of Leave for emp_code ${emp_code}: ${totalDaysOfLeave}`);
 
     res.status(200).json({ total_days_of_leave: totalDaysOfLeave, leaves });
   } catch (error) {
-    console.error("❌ Error fetching payroll data:", error);
+    console.error(" Error fetching payroll data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -735,11 +735,11 @@ app.get("/allpayroll", async (req, res) => {
       employeeLeaveData.push(groupedLeaves[empCode]);
     }
 
-    console.log("✅ Payroll Data for all employees:", JSON.stringify(employeeLeaveData, null, 2));
+    console.log(" Payroll Data for all employees:", JSON.stringify(employeeLeaveData, null, 2));
 
     res.status(200).json({ employeeLeaveData });
   } catch (error) {
-    console.error("❌ Error fetching payroll data:", error);
+    console.error("Error fetching payroll data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
