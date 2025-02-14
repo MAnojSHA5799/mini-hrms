@@ -164,7 +164,7 @@ console.log(localDate);
   const handleTimeInClick = async () => {
     const now = new Date();
     const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const morningLimit = 24 * 3600 + 30 * 60; // 10:15:00 in seconds
+    const morningLimit = 9 * 3600 + 30 * 60; // 10:15:00 in seconds
     const afternoonStart = 13 * 3600; // 13:00:00 in seconds
     const afternoonEnd = 14 * 3600 + 30 * 60; // 14:30:00 in seconds
   
@@ -181,7 +181,7 @@ console.log(localDate);
         }
       }
     } else if (currentTime > morningLimit) {
-      alert("The current time is after 24:30:00. You cannot Time In.");
+      alert("The current time is after 09:30:00. You cannot Time In.");
       return;
     }
   
